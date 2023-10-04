@@ -16,10 +16,6 @@ export default function Index() {
   const fileUploadRef = useRef<HTMLInputElement>(null);
 
   const [activeContent, setActiveContent] = useState("requirement");
-  /**
-   * Obj으로 처리한 이유
-   * 배열로 children 인덱스에 맞게 넣어줘도 되지만 그럴 경우 데이터가 추가,삭제될때 상이해짐
-   */
   const [valueObj, setValueObj] = useState<Record<string, string>>({});
   const [fileName, setFileName] = useState<string>();
 
@@ -39,7 +35,7 @@ export default function Index() {
       | "design"
       | "implementation"
       | "test"
-      | "installlation"
+      | "installlation",
   ) => {
     setActiveContent(value);
   };
