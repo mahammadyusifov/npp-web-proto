@@ -42,6 +42,28 @@ export default function Index() {
     setActiveContent(value);
   };
 
+  const initialTabData: Record<string, Record<string, string>> = {};
+  TABS.forEach((tab) => {
+    const tabData: Record<string, string> = {};
+    tab.children.forEach((item) => {
+      tabData[item.label] = item.values[0];
+    });
+    initialTabData[tab.label] = tabData;
+  });
+
+  const [allTabValues, setAllTabValues] = useState(initialTabData);
+
+  const onChangeTabValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setAllTabValues((prevValues) => ({
+      ...prevValues,
+      [activeContent]: {
+        ...prevValues[activeContent],
+        [name]: value,
+      },
+    }));
+  };
+
   const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -50,12 +72,12 @@ export default function Index() {
     }
   };
 
-  const onChangeTabValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setValueObj((prevValue) => ({
-      ...prevValue,
-      [name]: value,
-    }));
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const activeTabData = allTabValues[activeContent];
+    console.log(">>> submit tab value");
+    console.log(allTabValues);
   };
 
   return (
@@ -124,30 +146,36 @@ export default function Index() {
           </ul>
           <div>
             <div css={[cssObj.tabContent, cssObj.show]}>
-              <form action="">
+              <form action="" onSubmit={onSubmit}>
                 <div css={cssObj.content}>
                   <ul>
-                    {TABS[
-                      TABS.findIndex((tab) => tab.label === activeContent)
-                    ].children.map((item) => (
-                      <li key={`tab-${activeContent}-items-${item.label}`}>
-                        <label>{item.label}</label>
-                        <select
-                          name={item.label}
-                          value={valueObj[item.label]}
-                          onChange={onChangeTabValue}
+                    {TABS.map((tab) =>
+                      tab.children.map((item) => (
+                        <li
+                          key={`tab-${tab.label}-items-${item.label}`}
+                          style={{
+                            display:
+                              tab.label === activeContent ? "block" : "none",
+                          }}
                         >
-                          {item.values.map((option) => (
-                            <option
-                              value={option}
-                              key={`tab-${activeContent}-items-${item.label}-${option}`}
-                            >
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      </li>
-                    ))}
+                          <label>{item.label}</label>
+                          <select
+                            name={item.label}
+                            value={allTabValues[tab.label][item.label]}
+                            onChange={onChangeTabValue}
+                          >
+                            {item.values.map((option) => (
+                              <option
+                                value={option}
+                                key={`tab-${tab.label}-items-${item.label}-${option}`}
+                              >
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        </li>
+                      )),
+                    )}
                   </ul>
                 </div>
 

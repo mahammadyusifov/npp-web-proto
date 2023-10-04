@@ -1,3 +1,5 @@
+// src/constants/TABS.ts
+
 export const TABS = [
   {
     label: "requirement",
@@ -48,7 +50,7 @@ export const TABS = [
     label: "design",
     children: [
       {
-        label: "Software Development Planning",
+        label: "design Software Development Planning",
         values: ["Low", "Medium", "High"],
       },
       {
@@ -93,7 +95,7 @@ export const TABS = [
     label: "implementation",
     children: [
       {
-        label: "Software Development Planning",
+        label: "implement Software Development Planning",
         values: ["Low", "Medium", "High"],
       },
       {
@@ -138,7 +140,7 @@ export const TABS = [
     label: "test",
     children: [
       {
-        label: "Software Development Planning",
+        label: "test Software Development Planning",
         values: ["Low", "Medium", "High"],
       },
       {
@@ -183,7 +185,7 @@ export const TABS = [
     label: "installlation",
     children: [
       {
-        label: "Software Development Planning",
+        label: "install Software Development Planning",
         values: ["Low", "Medium", "High"],
       },
       {
