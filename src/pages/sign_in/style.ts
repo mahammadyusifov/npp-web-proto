@@ -1,5 +1,3 @@
-// src/pages/sign_in/style.ts
-
 import { css } from "@emotion/react";
 
 export const cssObj = {

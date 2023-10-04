@@ -1,5 +1,3 @@
-// src/pages/index.page.tsx
-
 import { cssObj } from "./style";
 import Link from "next/link";
 import Logo from "@/assets/logo.svg";

@@ -26,7 +26,6 @@ export default function SignIn() {
   const onSubmit = handleSubmit((data) => {
     loginMutate(data, {
       onSuccess: (data) => {
-        //로그인 성공 토큰 처리
         router.push("/");
       },
       onError: (error) => {},

@@ -15,9 +15,13 @@
     "@types/node": "20.6.5",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
-    "axios": "^1.5.0",
+    "axios": "^1.5.1",
+    "bcryptjs": "^2.4.3",
     "eslint": "8.50.0",
     "eslint-config-next": "13.5.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.6.1",
     "next": "^13.5.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -26,6 +30,9 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.4",
+    "@types/jsonwebtoken": "^9.0.3",
+    "@types/mysql": "^2.15.22",
     "prettier": "3.0.3"
   }
 }
