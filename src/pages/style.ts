@@ -1,3 +1,5 @@
+// src/pages/style.ts
+
 import { COLORS } from "@/constants/COLORS";
 import { FONT_SIZE } from "@/constants/FONT_SIZE";
 import { css } from "@emotion/react";
@@ -25,6 +27,11 @@ export const cssObj = {
       color: ${COLORS.gray300};
       font-size: ${FONT_SIZE.xs};
       height: 60px;
+      margin-left: 10px;
+      margin-right: 0;
+    }
+    & button:last-child {
+      margin-right: 0;
     }
     & div a:last-child {
       margin-right: -20px;
@@ -184,5 +191,8 @@ export const cssObj = {
     border-radius: 4px;
     font-size: ${FONT_SIZE.xs};
     padding: 8px 16px;
+  `,
+  bayesianTitleSection: css`
+    margin-top: 30px;
   `,
 };

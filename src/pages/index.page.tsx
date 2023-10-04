@@ -1,3 +1,5 @@
+// src/pages/index.page.tsx
+
 import { cssObj } from "./style";
 import Link from "next/link";
 import Logo from "@/assets/logo.svg";
@@ -80,7 +82,10 @@ export default function Index() {
         </div>
       </header>
 
-      <section css={cssObj.container}>
+      <section
+        id="bayesian-title-section"
+        css={[cssObj.container, cssObj.bayesianTitleSection]}
+      >
         <h1 css={cssObj.title}>Bayesian</h1>
       </section>
 
