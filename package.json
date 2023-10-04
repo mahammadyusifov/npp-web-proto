@@ -18,11 +18,14 @@
     "axios": "^1.5.0",
     "eslint": "8.50.0",
     "eslint-config-next": "13.5.2",
-    "next": "13.5.2",
+    "next": "^13.5.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-google-charts": "^4.0.1",
     "react-hook-form": "^7.46.2",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "prettier": "3.0.3"
   }
 }
