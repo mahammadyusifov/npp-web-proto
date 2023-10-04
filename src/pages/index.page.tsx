@@ -9,14 +9,12 @@ import { TABS } from "@/constants/TABS";
 import { useQuery } from "@tanstack/react-query";
 import { useGetProductInfo } from "@/apis/contents/useGetContent";
 import { ROUTER } from "@/constants/ROUTER";
+import { getCookie } from "@/utils/cookies";
 
 export default function Index() {
   const router = useRouter();
-
   const { data } = useGetProductInfo();
-
   const fileUploadRef = useRef<HTMLInputElement>(null);
-
   const [activeContent, setActiveContent] = useState("requirement");
   const [valueObj, setValueObj] = useState<Record<string, string>>({});
   const [fileName, setFileName] = useState<string>();
@@ -30,6 +28,15 @@ export default function Index() {
     });
     setValueObj(obj);
   }, [activeContent]);
+
+  useEffect(() => {
+    const authToken = getCookie("authToken");
+
+    if (!authToken) {
+      // delete after debug
+      // router.push(ROUTER.SIGN_IN);
+    }
+  }, [router]);
 
   const showContent = (
     value:

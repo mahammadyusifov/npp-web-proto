@@ -1,3 +1,5 @@
+// src/pages/sign_in/index.page.tsx
+
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import Logo from "@/assets/logo_2xl.svg";
@@ -55,7 +57,7 @@ export default function SignIn() {
               required: "비밀번호를 입력해주세요.",
             })}
           />
-          <button type="submit">Sign in</button>
+          <button type="submit">Sign In</button>
         </form>
 
         <div>
