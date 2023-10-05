@@ -7,6 +7,7 @@ import { usePostLogin } from "@/apis/auth/usePostLogin";
 import { useRouter } from "next/router";
 import { cssObj } from "./style";
 import { ROUTER } from "@/constants/ROUTER";
+import { API_URL } from "@/constants/API_URL";
 
 type FormValues = {
   email: string;
@@ -24,14 +25,8 @@ export default function SignIn() {
   } = useForm<FormValues>();
 
   const onSubmit = handleSubmit((data) => {
-    // loginMutate(data, {
-    //   onSuccess: (data) => {
-    //     router.push("/");
-    //   },
-    //   onError: (error) => {},
-    // });
     console.log(JSON.stringify(data));
-    fetch("http://0.0.0.0:8000/auth/login", {
+    fetch(API_URL.AUTH.LOGIN, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

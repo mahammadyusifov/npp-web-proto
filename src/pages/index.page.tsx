@@ -11,7 +11,6 @@ import { getCookie } from "@/utils/cookies";
 
 export default function Index() {
   const router = useRouter();
-  const { data } = useGetProductInfo();
   const fileUploadRef = useRef<HTMLInputElement>(null);
   const [activeContent, setActiveContent] = useState("requirement");
   const [valueObj, setValueObj] = useState<Record<string, string>>({});
