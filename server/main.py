@@ -1,11 +1,11 @@
 # main.py
 
-from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi import FastAPI, HTTPException, Depends, status, Request
 from db import MySQLEngine
-from model import UserCreate, User, TbMember
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
+from model import TbMember
 from fastapi.middleware.cors import CORSMiddleware
+import bcrypt
 import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -26,44 +26,49 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Dependency to get the database session
+
 def get_db():
     db = MySQLEngine()
-    session = db.session()
-    try:
-        yield session
-    finally:
-        session.close()
-        db.dispose()
+    return db.session()
 
 
-# Response and Error models
-class SuccessResponse(BaseModel):
-    success: bool
+@app.post("/auth/login")
+async def login(request: Request, db: Session = Depends(get_db)):
+    body = await request.json()
+    email = body['email']
+    password = body['password'].encode('utf-8')
 
+    db_user = db.query(TbMember).filter(TbMember.user_email == email).first()
 
-class ErrorResponse(BaseModel):
-    code: str
-    msg: str
-
-
-@app.post("/auth/login", response_model=SuccessResponse)
-def login(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(TbMember).filter(TbMember.user_email == user.user_email,
-                                        TbMember.user_password == user.user_password).first()
-    if not db_user:
+    if not db_user or not bcrypt.checkpw(password, db_user.user_password.encode('utf-8')):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=ErrorResponse(code="UNAUTHORIZED", msg="Incorrect email or password")
+            detail="Incorrect email or password"
         )
 
     return {"success": True}
 
 
-# Custom exception handler for more structured error responses
-@app.exception_handler(HTTPException)
-async def http_exception_handler(request, exc: HTTPException):
-    return {
-        "code": str(exc.status_code),
-        "msg": exc.detail
-    }
+@app.post("/auth/register")
+async def register(request: Request, db: Session = Depends(get_db)):
+    body = await request.json()
+    email = body['email']
+    raw_password = body['password'].encode('utf-8')
+
+    existing_user = db.query(TbMember).filter(TbMember.user_email == email).first()
+
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
+
+    # Hash the password using bcrypt
+    hashed_password = bcrypt.hashpw(raw_password, bcrypt.gensalt()).decode('utf-8')
+
+    new_user = TbMember(user_email=email, user_password=hashed_password)
+    db.add(new_user)
+    db.commit()
+
+    return {"success": True, "message": "User registered successfully"}
+

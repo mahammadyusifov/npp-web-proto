@@ -12,21 +12,10 @@ class TbMember(Base):
     __tablename__ = "member"
 
     idx = Column(Integer, primary_key=True, index=True, autoincrement=True, comment="index")
-    user_email = Column(String(100), primary_key=True, index=True, comment="email")
+    user_email = Column(String(100), unique=True, index=True, comment="email")
     user_password = Column(String(100), nullable=False, comment="password")
 
 
 class UserBase(BaseModel):
     user_email: str
     user_password: str
-
-
-class UserCreate(UserBase):
-    pass
-
-
-class User(UserBase):
-    idx: int
-
-    class Config:
-        orm_mode = True

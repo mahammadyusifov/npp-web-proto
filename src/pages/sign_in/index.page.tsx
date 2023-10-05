@@ -24,12 +24,33 @@ export default function SignIn() {
   } = useForm<FormValues>();
 
   const onSubmit = handleSubmit((data) => {
-    loginMutate(data, {
-      onSuccess: (data) => {
-        router.push("/");
+    // loginMutate(data, {
+    //   onSuccess: (data) => {
+    //     router.push("/");
+    //   },
+    //   onError: (error) => {},
+    // });
+    console.log(JSON.stringify(data));
+    fetch("http://0.0.0.0:8000/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-      onError: (error) => {},
-    });
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // router.push("/");
+        console.log("login success");
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
   });
 
   return (
@@ -43,8 +64,7 @@ export default function SignIn() {
           <input
             type="email"
             placeholder="이메일주소"
-            {...(register("email"),
-            {
+            {...register("email", {
               required: "이메일을 입력해주세요.",
             })}
             required={true}
