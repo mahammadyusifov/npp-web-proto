@@ -12,7 +12,7 @@ import { getCookie } from "@/utils/cookies";
 export default function Index() {
   const router = useRouter();
   const fileUploadRef = useRef<HTMLInputElement>(null);
-  const [activeContent, setActiveContent] = useState("requirement");
+  const [activeContent, setActiveContent] = useState("Requirement Dev");
   const [valueObj, setValueObj] = useState<Record<string, string>>({});
   const [fileName, setFileName] = useState<string>();
 
@@ -30,27 +30,45 @@ export default function Index() {
     const authToken = getCookie("authToken");
 
     if (!authToken) {
-      // delete after debug
       // router.push(ROUTER.SIGN_IN);
     }
   }, [router]);
 
   const showContent = (
     value:
-      | "requirement"
-      | "design"
-      | "implementation"
-      | "test"
-      | "installlation",
+      | "Requirement Dev"
+      | "Requirement V&V"
+      | "Design Dev"
+      | "Design V&V"
+      | "Implementation Dev"
+      | "Implementation V&V"
+      | "Test Dev"
+      | "Test V&V"
+      | "Installlation and Checkout Dev"
+      | "Installlation and Checkout V&V"
   ) => {
     setActiveContent(value);
+  };
+
+  const moveToPrevTab = () => {
+    const currentIndex = TABS.findIndex(tab => tab.label === activeContent);
+    if (currentIndex > 0) {
+      setActiveContent(TABS[currentIndex - 1].label);
+    }
+  };
+
+  const moveToNextTab = () => {
+    const currentIndex = TABS.findIndex(tab => tab.label === activeContent);
+    if (currentIndex < TABS.length - 1) {
+      setActiveContent(TABS[currentIndex + 1].label);
+    }
   };
 
   const initialTabData: Record<string, Record<string, string>> = {};
   TABS.forEach((tab) => {
     const tabData: Record<string, string> = {};
     tab.children.forEach((item) => {
-      tabData[item.label] = item.values[0];
+      tabData[item.label] = item.values[1];
     });
     initialTabData[tab.label] = tabData;
   });
@@ -151,6 +169,17 @@ export default function Index() {
           <div>
             <div css={[cssObj.tabContent, cssObj.show]}>
               <form action="" onSubmit={onSubmit}>
+                <div css={cssObj.footer}>
+                  <button type="button" onClick={moveToPrevTab} css={cssObj.navigateButton}>
+                    Prev
+                  </button>
+                  <button type="button" data-button="next" onClick={moveToNextTab} css={cssObj.navigateButton}>
+                    Next
+                  </button>
+                  <button type="submit" css={cssObj.footerButton}>
+                    Submit
+                  </button>
+                </div>
                 <div css={cssObj.content}>
                   <ul>
                     {TABS.map((tab) =>
@@ -181,12 +210,6 @@ export default function Index() {
                       )),
                     )}
                   </ul>
-                </div>
-
-                <div css={cssObj.footer}>
-                  <button type="submit" css={cssObj.footerButton}>
-                    Submit
-                  </button>
                 </div>
               </form>
             </div>

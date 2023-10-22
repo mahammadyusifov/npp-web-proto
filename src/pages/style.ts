@@ -190,6 +190,17 @@ export const cssObj = {
     font-size: ${FONT_SIZE.xs};
     padding: 8px 16px;
   `,
+  navigateButton: css`
+    background-color: ${COLORS.gray50};
+    color: ${COLORS.gray500};
+    border: none;
+    border-radius: 4px;
+    font-size: ${FONT_SIZE.xs};
+    padding: 8px 16px;
+    &[data-button="next"] {
+      margin-right: 16px;
+    }
+  `,
   bayesianTitleSection: css`
     margin-top: 30px;
   `,
