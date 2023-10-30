@@ -10,6 +10,8 @@ import { ROUTER } from "@/constants/ROUTER";
 
 export default function Result() {
   const router = useRouter();
+  const resultData = router.query.data ? JSON.parse(router.query.data as string) : null;
+
   return (
     <>
       <header css={cssObj.header}>

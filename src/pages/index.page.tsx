@@ -94,13 +94,49 @@ export default function Index() {
     }
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const postTabValues = async (data: Record<string, Record<string, string>>) => {
+    for (let key in data) {
+      for (let key2 in data[key]) {
+        if (data[key][key2] === "High") {
+          data[key][key2] = "1";
+        }
+        else if (data[key][key2] === "Medium"){
+          data[key][key2] = "2";
+        }
+        else if (data[key][key2] === "Low"){
+          data[key][key2] = "3";
+        }
+      }
+    }
 
-    const activeTabData = allTabValues[activeContent];
-    console.log(">>> submit tab value");
-    console.log(allTabValues);
+    console.log(data);
+
+    const response = await fetch('/content/common', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    return response.json();
   };
+
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const resultData = await postTabValues(allTabValues);
+
+      router.push({
+        pathname: ROUTER.RESULT,
+        query: { data: JSON.stringify(resultData) }
+      });
+    } catch (error) {
+      console.error("Error posting data", error);
+    }
+  };
+
 
   return (
     <>

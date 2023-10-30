@@ -147,7 +147,7 @@ data <- list(
     # SR_VVH=0, SR_VVM=0.17, SR_VVL = 0.83,
 
     # number of function points (same in all phases)
-    SR_FP=FP,
+    SR_FP=56,
 
 
     # Dev Attribute model - Design phase
@@ -318,7 +318,7 @@ data <- list(
     # SD_VVH=0, SD_VVM=0, SD_VVL = 1,
 
     # number of function points (same in all phases)
-    SD_FP=FP,
+    SD_FP=56,
 
 
     # Dev Attribute model - Implementation phase
@@ -506,7 +506,7 @@ data <- list(
     # IM_VVH=0, IM_VVM=0, IM_VVL=1,
 
     # number of function points (same in all phases)
-    IM_FP=FP,
+    IM_FP=56,
 
 
     # Dev Attribute model - Test phase
@@ -655,7 +655,7 @@ data <- list(
     # ST_VVH=0, ST_VVM=0, ST_VVL = 1,
 
     # number of function points (same in all phases)
-    ST_FP=FP,
+    ST_FP=56,
 
 
     # Dev Attribute model - Installation & Checkout phase
@@ -749,5 +749,5 @@ data <- list(
     # IC_VVH=0, IC_VVM=1, IC_VVL=0,
 
     # number of function points (same in all phases)
-    IC_FP=FP
+    IC_FP=56
 )
