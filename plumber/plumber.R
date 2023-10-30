@@ -9,15 +9,16 @@ cors <- function(res) {
   plumber::forward()
 }
 
+#* Estimate using WinBUGS
 #* @preempt cors
 #* @post /content/common
+#* @param req
 function(req) {
   parsed_data <- fromJSON(req$postBody, flatten = TRUE)
 
-  model.file <- "./R2WinBUGS_Combined_Model.txt"
+  model.file <- "C:/Users/blueRab2it/Documents/Github/npp-web-proto/plumber/R2WinBUGS_Combined_Model.txt"
   source("data.R")
 
-  # parameters to be monitored
   parameters <- c(
     "SR_DevH_post",
     "SR_DevM_post",
@@ -61,7 +62,6 @@ function(req) {
     "IC_Defect_introduced_in_current"
   )
 
-  # variable
   FP <- 56
   data$SR_FP <- FP
   data$SD_FP <- FP
@@ -204,32 +204,100 @@ function(req) {
   data$IC_VVASRG_state <- as.numeric(parsed_data$`Installlation and Checkout V&V`$`Acitivity Summary Report`)
   data$IC_VVFRG_state <- as.numeric(parsed_data$`Installlation and Checkout V&V`$`Final Report Generation`)
 
-  # # run WinBUGS
-  #   model.sim <- bugs(data, inits=NULL, parameters, model.file,
-  #                     n.chains=1, n.iter=20000, n.burnin=500, debug=FALSE, DIC=FALSE, n.thin=1,
-  #                     bugs.directory="c:/WinBUGS14/",
-  #                     working.directory="c:/WinBUGS14/bbn_Routput")
+  model.sim <- bugs(data, inits=NULL, parameters, model.file,
+                    n.chains=1, n.iter=20000, n.burnin=500, debug=FALSE, DIC=FALSE, n.thin=1,
+                    bugs.directory="C:/WinBUGS14",
+                    working.directory="C:/WinBUGS14/bbn_Routput")
 
-    # # output results
-    # print(model.sim, digits.summary = 3)
+  defect_introduced <- model.sim[["sims.list"]][["IC_Defect_introduced_in_current"]]
 
-    # #### creating dataframe
-    # defect_introduced <- model.sim[["sims.list"]][["IC_Defect_introduced_in_current"]]
-    # head(defect_introduced)
+  df.defect_introduced <- data.frame(value=defect_introduced, defect.type="introduced")
+  df.defect_introduced$iteration <- 1:nrow(df.defect_introduced)
 
-    # df.defect_introduced <- data.frame(value=defect_introduced, defect.type="introduced")
-    # head(df.defect_introduced)
-    # df.defect_introduced$iteration <- 1:nrow(df.defect_introduced)
-    # head(df.defect_introduced)
+  defect_remained <- model.sim[["sims.list"]][["IC_Total_Remained_Defect"]]
 
-    # defect_remained <- model.sim[["sims.list"]][["IC_Total_Remained_Defect"]]
-    # head(defect_remained)
+  df.defect_remained <- data.frame(value=defect_remained, defect.type="remained")
+  df.defect_remained$iteration <- 1:nrow(df.defect_remained)
 
-    # df.defect_remained <- data.frame(value=defect_remained, defect.type="remained")
-    # head(df.defect_remained)
-    # df.defect_remained$iteration <- 1:nrow(df.defect_remained)
-    # head(df.defect_remained)
+  df <- rbind(df.defect_introduced, df.defect_remained)
 
-    # df <- rbind(df.defect_introduced, df.defect_remained)
-    # head(df)
+  return(df)
+}
+
+
+#* Estimate using WinBUGS
+#* @preempt cors
+#* @get /content/common2
+function() {
+  model.file <- "C:/Users/blueRab2it/Documents/Github/npp-web-proto/plumber/R2WinBUGS_Combined_Model.txt"
+  source("data.R")
+
+  parameters <- c(
+    "SR_DevH_post",
+    "SR_DevM_post",
+    "SR_DevL_post",
+    "SR_VVH_post",
+    "SR_VVM_post",
+    "SR_VVL_post",
+    "SR_Total_Remained_Defect",
+    "SR_Defect_introduced_in_current",
+    "SD_DevH_post",
+    "SD_DevM_post",
+    "SD_DevL_post",
+    "SD_VVH_post",
+    "SD_VVM_post",
+    "SD_VVL_post",
+    "SD_Total_Remained_Defect",
+    "SD_Defect_introduced_in_current",
+    "IM_DevH_post",
+    "IM_DevM_post",
+    "IM_DevL_post",
+    "IM_VVH_post",
+    "IM_VVM_post",
+    "IM_VVL_post",
+    "IM_Total_Remained_Defect",
+    "IM_Defect_introduced_in_current",
+    "ST_DevH_post",
+    "ST_DevM_post",
+    "ST_DevL_post",
+    "ST_VVH_post",
+    "ST_VVM_post",
+    "ST_VVL_post",
+    "ST_Total_Remained_Defect",
+    "ST_Defect_introduced_in_current",
+    "IC_DevH_post",
+    "IC_DevM_post",
+    "IC_DevL_post",
+    "IC_VVH_post",
+    "IC_VVM_post",
+    "IC_VVL_post",
+    "IC_Total_Remained_Defect",
+    "IC_Defect_introduced_in_current"
+  )
+
+  FP <- 56
+  data$SR_FP <- FP
+  data$SD_FP <- FP
+  data$IM_FP <- FP
+  data$ST_FP <- FP
+  data$IC_FP <- FP
+
+  model.sim <- bugs(data, inits=NULL, parameters, model.file,
+                    n.chains=1, n.iter=20000, n.burnin=500, debug=FALSE, DIC=FALSE, n.thin=1,
+                    bugs.directory="C:/WinBUGS14",
+                    working.directory="C:/WinBUGS14/bbn_Routput")
+
+  defect_introduced <- model.sim[["sims.list"]][["IC_Defect_introduced_in_current"]]
+
+  df.defect_introduced <- data.frame(value=defect_introduced, defect.type="introduced")
+  df.defect_introduced$iteration <- 1:nrow(df.defect_introduced)
+
+  defect_remained <- model.sim[["sims.list"]][["IC_Total_Remained_Defect"]]
+
+  df.defect_remained <- data.frame(value=defect_remained, defect.type="remained")
+  df.defect_remained$iteration <- 1:nrow(df.defect_remained)
+
+  df <- rbind(df.defect_introduced, df.defect_remained)
+
+  return(df)
 }

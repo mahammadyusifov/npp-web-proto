@@ -2,4 +2,4 @@
 library("plumber")
 
 pr("./plumber/plumber.R") %>%
-  pr_run(port = 8000)
+  pr_run(debug = TRUE, port = 8000)

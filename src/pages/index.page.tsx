@@ -15,6 +15,21 @@ export default function Index() {
   const [activeContent, setActiveContent] = useState("Requirement Dev");
   const [valueObj, setValueObj] = useState<Record<string, string>>({});
   const [fileName, setFileName] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const loadingLayerStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    zIndex: 1000,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  };
+  
 
   useEffect(() => {
     const obj: Record<string, string> = {};
@@ -95,6 +110,8 @@ export default function Index() {
   };
 
   const postTabValues = async (data: Record<string, Record<string, string>>) => {
+    setIsLoading(true);
+
     for (let key in data) {
       for (let key2 in data[key]) {
         if (data[key][key2] === "High") {
@@ -109,15 +126,21 @@ export default function Index() {
       }
     }
 
-    console.log(data);
+    console.log(JSON.stringify(data));
 
-    const response = await fetch('/content/common', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
+    // const response = await fetch('/content/common', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(data),
+    // });
+
+    const response = await fetch('/content/common2', {
+      method: 'GET',
     });
+
+    setIsLoading(false);
 
     return response.json();
   };
@@ -140,118 +163,123 @@ export default function Index() {
 
   return (
     <>
-      <header css={cssObj.header}>
-        <div css={cssObj.container}>
-          <div>
-            <Link href={ROUTER.HOME}>
-              <Logo />
-            </Link>
-            <nav>
-              <button
-                css={cssObj.active}
-                onClick={() => router.push(ROUTER.HOME)}
-              >
-                Bayesian Methods
-              </button>
-              <button disabled>Statistical Methods</button>
-              <button onClick={() => router.push(ROUTER.RESULT)}>
-                Reliability Views
-              </button>
-            </nav>
-          </div>
+      {isLoading && (
+        <div style={loadingLayerStyle}>
+          <p>Loading...</p>
         </div>
-      </header>
-
-      <section
-        id="bayesian-title-section"
-        css={[cssObj.container, cssObj.bayesianTitleSection]}
-      >
-        <h1 css={cssObj.title}>Bayesian</h1>
-      </section>
-
-      <section css={[cssObj.container, cssObj.scv]}>
-        <p>Bayesian Input File</p>
-        <div css={cssObj.fileUplaodForm}>
-          <div css={cssObj.filebox}>
-            <label>
-              <div>{fileName ?? "Choose file"}</div>
-            </label>
-            <input
-              type="file"
-              css={cssObj.uploadFile}
-              ref={fileUploadRef}
-              onChange={onChangeFile}
-            />
-          </div>
-
-          <button onClick={() => fileUploadRef.current?.click()}>Browse</button>
-          <button type="submit">Upload</button>
-        </div>
-      </section>
-
-      <section css={cssObj.tabs}>
-        <div css={cssObj.container}>
-          <ul>
-            {TABS.map((tab) => (
-              <li
-                key={`tab-${tab.label}`}
-                css={activeContent === tab.label ? cssObj.activeTab : {}}
-                onClick={() => showContent(tab.label)}
-              >
-                {tab.label}
-              </li>
-            ))}
-          </ul>
-          <div>
-            <div css={[cssObj.tabContent, cssObj.show]}>
-              <form action="" onSubmit={onSubmit}>
-                <div css={cssObj.footer}>
-                  <button type="button" onClick={moveToPrevTab} css={cssObj.navigateButton}>
-                    Prev
-                  </button>
-                  <button type="button" data-button="next" onClick={moveToNextTab} css={cssObj.navigateButton}>
-                    Next
-                  </button>
-                  <button type="submit" css={cssObj.footerButton}>
-                    Submit
-                  </button>
-                </div>
-                <div css={cssObj.content}>
-                  <ul>
-                    {TABS.map((tab) =>
-                      tab.children.map((item) => (
-                        <li
-                          key={`tab-${tab.label}-items-${item.label}`}
-                          style={{
-                            display:
-                              tab.label === activeContent ? "block" : "none",
-                          }}
-                        >
-                          <label>{item.label}</label>
-                          <select
-                            name={item.label}
-                            value={allTabValues[tab.label][item.label]}
-                            onChange={onChangeTabValue}
-                          >
-                            {item.values.map((option) => (
-                              <option
-                                value={option}
-                                key={`tab-${tab.label}-items-${item.label}-${option}`}
-                              >
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                        </li>
-                      )),
-                    )}
-                  </ul>
-                </div>
-              </form>
+      )}
+        <header css={cssObj.header}>
+          <div css={cssObj.container}>
+            <div>
+              <Link href={ROUTER.HOME}>
+                <Logo />
+              </Link>
+              <nav>
+                <button
+                  css={cssObj.active}
+                  onClick={() => router.push(ROUTER.HOME)}
+                >
+                  Bayesian Methods
+                </button>
+                <button disabled>Statistical Methods</button>
+                <button onClick={() => router.push(ROUTER.RESULT)}>
+                  Reliability Views
+                </button>
+              </nav>
             </div>
           </div>
-        </div>
-      </section>
+        </header>
+
+        <section
+          id="bayesian-title-section"
+          css={[cssObj.container, cssObj.bayesianTitleSection]}
+        >
+          <h1 css={cssObj.title}>Bayesian</h1>
+        </section>
+
+        <section css={[cssObj.container, cssObj.scv]}>
+          <p>Bayesian Input File</p>
+          <div css={cssObj.fileUplaodForm}>
+            <div css={cssObj.filebox}>
+              <label>
+                <div>{fileName ?? "Choose file"}</div>
+              </label>
+              <input
+                type="file"
+                css={cssObj.uploadFile}
+                ref={fileUploadRef}
+                onChange={onChangeFile}
+              />
+            </div>
+
+            <button onClick={() => fileUploadRef.current?.click()}>Browse</button>
+            <button type="submit">Upload</button>
+          </div>
+        </section>
+
+        <section css={cssObj.tabs}>
+          <div css={cssObj.container}>
+            <ul>
+              {TABS.map((tab) => (
+                <li
+                  key={`tab-${tab.label}`}
+                  css={activeContent === tab.label ? cssObj.activeTab : {}}
+                  onClick={() => showContent(tab.label)}
+                >
+                  {tab.label}
+                </li>
+              ))}
+            </ul>
+            <div>
+              <div css={[cssObj.tabContent, cssObj.show]}>
+                <form action="" onSubmit={onSubmit}>
+                  <div css={cssObj.footer}>
+                    <button type="button" onClick={moveToPrevTab} css={cssObj.navigateButton}>
+                      Prev
+                    </button>
+                    <button type="button" data-button="next" onClick={moveToNextTab} css={cssObj.navigateButton}>
+                      Next
+                    </button>
+                    <button type="submit" css={cssObj.footerButton}>
+                      Submit
+                    </button>
+                  </div>
+                  <div css={cssObj.content}>
+                    <ul>
+                      {TABS.map((tab) =>
+                        tab.children.map((item) => (
+                          <li
+                            key={`tab-${tab.label}-items-${item.label}`}
+                            style={{
+                              display:
+                                tab.label === activeContent ? "block" : "none",
+                            }}
+                          >
+                            <label>{item.label}</label>
+                            <select
+                              name={item.label}
+                              value={allTabValues[tab.label][item.label]}
+                              onChange={onChangeTabValue}
+                            >
+                              {item.values.map((option) => (
+                                <option
+                                  value={option}
+                                  key={`tab-${tab.label}-items-${item.label}-${option}`}
+                                >
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                          </li>
+                        )),
+                      )}
+                    </ul>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
     </>
   );
 }

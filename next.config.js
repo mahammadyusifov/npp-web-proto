@@ -1,8 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   pageExtensions: ["page.tsx"],
   compiler: { emotion: true },
+  async rewrites() {
+    return [
+      {
+        destination: 'http://127.0.0.1:8000/:path*',
+        source: '/:path*',
+      },
+      {
+        destination: 'http://127.0.0.1:8000/:path*',
+        source: '/:path*',
+      },
+    ];
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,
@@ -11,14 +23,6 @@ const nextConfig = {
     });
 
     return config;
-  },
-  async rewrites() {
-    return [
-      {
-        source: "/:path*",
-        destination: "http://127.0.0.1:8000/:path*",
-      },
-    ];
   },
 };
 
