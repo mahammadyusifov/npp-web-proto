@@ -59,11 +59,11 @@ export const cssObj = {
       width: 50%;
       margin-bottom: 80px;
     }
-    & > div:nth-child(5),
-    & > div:nth-child(6) {
+    & > div:nth-child(1),
+    & > div:nth-child(2) {
       width: 100%;
     }
-    & > div:nth-child(6) {
+    & > div:nth-child(2) {
       margin-bottom: 0;
     }
   `,
