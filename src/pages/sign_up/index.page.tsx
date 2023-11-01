@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import Logo from "@/assets/logo_2xl.svg";
 import { cssObj } from "./style";
 import { ROUTER } from "@/constants/ROUTER";
+import { useRouter } from "next/router";
+import { API_URL } from "@/constants/API_URL";
 
 type FormValues = {
   email: string;
@@ -10,13 +12,38 @@ type FormValues = {
 };
 
 export default function SignUp() {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
 
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const onSubmit = handleSubmit((data) => {
+    console.log(JSON.stringify(data));
+    fetch(API_URL.AUTH.REGISTER, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // router.push("/");
+        console.log("signup success");
+        router.push(ROUTER.SIGN_IN);
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  });
 
   return (
     <div css={cssObj.wrapper}>
@@ -29,7 +56,7 @@ export default function SignUp() {
           <input
             type="email"
             placeholder="이메일주소"
-            {...(register("email"),
+            {...register("email",
             {
               required: "이메일을 입력해주세요.",
             })}

@@ -1,6 +1,7 @@
 import { cssObj } from "./style";
 import Link from "next/link";
 import Logo from "@/assets/logo.svg";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { TABS } from "@/constants/TABS";
@@ -29,7 +30,6 @@ export default function Index() {
     justifyContent: 'center',
     alignItems: 'center'
   };
-  
 
   useEffect(() => {
     const obj: Record<string, string> = {};
@@ -126,23 +126,21 @@ export default function Index() {
       }
     }
 
-    console.log(JSON.stringify(data));
+    try {
+      const response = await axios.post('/content/common',
+        data,
+        {
+          timeout: 60 * 4 * 1000,
+        }
+      );
 
-    // const response = await fetch('/content/common', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(data),
-    // });
+      setIsLoading(false);
 
-    const response = await fetch('/content/common2', {
-      method: 'GET',
-    });
-
-    setIsLoading(false);
-
-    return response.json();
+      return response.data;
+    } catch (error) {
+      console.error("Error Axios", error);
+      setIsLoading(false);
+    }
   };
 
 
