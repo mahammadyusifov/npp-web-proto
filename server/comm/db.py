@@ -1,10 +1,10 @@
 # server/db.py
 
-from sqlalchemy import *
-from sqlalchemy.orm import sessionmaker
-from dotenv import load_dotenv
 import os
 
+from dotenv import load_dotenv
+from sqlalchemy import *
+from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
@@ -26,3 +26,15 @@ class MySQLEngine:
     def connection(self):
         conn = self.engine.connect()
         return conn
+
+
+engine = create_engine(DB_URL, pool_recycle=500)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+def get_db_auto_close():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
