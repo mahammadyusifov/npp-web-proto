@@ -21,11 +21,15 @@ export default function SignUp() {
   } = useForm<FormValues>();
 
   const onSubmit = handleSubmit((data) => {
-    console.log(JSON.stringify(data));
     fetch(API_URL.AUTH.REGISTER, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+        "Access-Control-Allow-Headers":
+          "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
       },
       body: JSON.stringify(data),
     })
@@ -36,7 +40,6 @@ export default function SignUp() {
         return response.json();
       })
       .then((data) => {
-        // router.push("/");
         console.log("signup success");
         router.push(ROUTER.SIGN_IN);
       })
@@ -56,8 +59,7 @@ export default function SignUp() {
           <input
             type="email"
             placeholder="이메일주소"
-            {...register("email",
-            {
+            {...register("email", {
               required: "이메일을 입력해주세요.",
             })}
             required={true}

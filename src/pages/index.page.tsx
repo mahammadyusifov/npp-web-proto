@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useGetProductInfo } from "@/apis/contents/useGetContent";
 import { ROUTER } from "@/constants/ROUTER";
 import { getCookie } from "@/utils/cookies";
+import { API_URL } from "@/constants/API_URL";
 
 export default function Index() {
   const router = useRouter();
@@ -127,10 +128,30 @@ export default function Index() {
     }
 
     try {
-      const response = await axios.post('/content/common',
-        data,
+      // const response = await axios.post(API_URL.CONTENT.COMMON2,
+      //   data,
+      //   {
+      //     timeout: 60 * 4 * 1000,
+      //     headers: {
+      //       "Access-Control-Allow-Origin": "*",
+      //       "Access-Control-Allow-Credentials": "true",
+      //       "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+      //       "Access-Control-Allow-Headers":
+      //         "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
+      //     }
+      //   }
+      // );
+
+      const response = await axios.get(API_URL.CONTENT.COMMON2,
         {
           timeout: 60 * 4 * 1000,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+            "Access-Control-Allow-Headers":
+              "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
+          }
         }
       );
 

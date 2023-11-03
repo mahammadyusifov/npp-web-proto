@@ -1,9 +1,8 @@
 # server/model.py
 
 from pydantic import BaseModel
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-
 
 Base = declarative_base()
 
@@ -17,5 +16,5 @@ class TbMember(Base):
 
 
 class UserBase(BaseModel):
-    user_email: str
-    user_password: str
+    email: str
+    password: str

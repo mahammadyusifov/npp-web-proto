@@ -25,11 +25,15 @@ export default function SignIn() {
   } = useForm<FormValues>();
 
   const onSubmit = handleSubmit((data) => {
-    console.log(JSON.stringify(data));
     fetch(API_URL.AUTH.LOGIN, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+        "Access-Control-Allow-Headers":
+          "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
       },
       body: JSON.stringify(data),
     })
@@ -40,7 +44,7 @@ export default function SignIn() {
         return response.json();
       })
       .then((data) => {
-        // router.push("/");
+        router.push("/");
         console.log("login success");
       })
       .catch((error) => {
