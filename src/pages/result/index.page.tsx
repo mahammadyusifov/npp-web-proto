@@ -47,7 +47,9 @@ export default function Result() {
               <button onClick={() => router.push(ROUTER.HOME)}>
                 Bayesian Methods
               </button>
-              <button disabled>Statistical Methods</button>
+              <button onClick={() => router.push(ROUTER.SST)}>
+                  Statistical Methods
+              </button>
               <button
                 css={cssObj.active}
                 onClick={() => router.push(ROUTER.RESULT)}

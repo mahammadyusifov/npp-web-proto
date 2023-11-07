@@ -3,4 +3,5 @@ export const ROUTER = {
   SIGN_UP: "/sign_up",
   HOME: "/",
   RESULT: "/result",
+  SST:"/sst",
 };
