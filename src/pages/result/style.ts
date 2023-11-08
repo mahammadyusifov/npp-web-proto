@@ -43,6 +43,11 @@ export const cssObj = {
     margin: 0 auto;
     padding: 0 20px;
   `,
+  meantext: css`
+    font-weight: bold;
+    margin-bottom: 20px;
+  `,
+  meannum: css``,
   active: css`
     color: ${COLORS.white};
   `,
@@ -55,16 +60,5 @@ export const cssObj = {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    & > div {
-      width: 50%;
-      margin-bottom: 80px;
-    }
-    & > div:nth-of-type(1),
-    & > div:nth-of-type(2) {
-      width: 100%;
-    }
-    & > div:nth-of-type(2) {
-      margin-bottom: 0;
-    }
   `,
 };

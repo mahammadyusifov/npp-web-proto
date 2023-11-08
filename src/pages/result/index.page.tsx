@@ -67,6 +67,12 @@ export default function Result() {
       </section>
 
       <section css={[cssObj.container, cssObj.chart]}>
+
+        <div>
+          <span css={cssObj.meantext}>MEAN:</span>
+          <span css={cssObj.meannum}>14.05</span>
+        </div>
+
         <Chart
           chartType="AreaChart"
           data={[["Iterations", "Values"], ...defect_introduced]}
@@ -80,13 +86,19 @@ export default function Result() {
             vAxis: { textStyle: { color: "#9AA1A9" } },
           }}
         />
+
+        <div>
+          <span css={cssObj.meantext}>MEAN:</span>
+          <span css={cssObj.meannum}>11.05</span>
+        </div>
+
         <Chart
           chartType="AreaChart"
           data={[["Iterations", "Values"], ...defect_remained]}
           options={{
             title: "IC_Total_Remained_Defect",
             titleTextStyle: { color: "#111827", fontSize: 12 },
-            colors: ["#2563EB"], 
+            colors: ["#2563EB"],
             areaOpacity: 0.05,
             chartArea: { width: 1090, left: 30, top: 20 },
             hAxis: { textStyle: { color: "#9AA1A9" } },

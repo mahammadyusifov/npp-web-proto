@@ -1,6 +1,7 @@
 import { cssObj } from "./style";
 import Link from "next/link";
 import Logo from "@/assets/logo.svg";
+import LogoutImage from "@/assets/logout.svg";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -206,6 +207,9 @@ export default function Index() {
                 </button>
               </nav>
             </div>
+            <Link href={ROUTER.SIGN_IN}>
+              <LogoutImage />
+            </Link>
           </div>
         </header>
 

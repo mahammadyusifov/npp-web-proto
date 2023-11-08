@@ -85,7 +85,7 @@ export const cssObj = {
     & section > form button {
       height: 38px;
       border: none;
-      background-color: var(--blue-600);
+      background-color: var(--primary-color);
       color: var(--white);
       border-radius: 5px;
       font-size: var(--font-sm);

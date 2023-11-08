@@ -58,17 +58,17 @@ export default function SignUp() {
         <form onSubmit={onSubmit}>
           <input
             type="email"
-            placeholder="이메일주소"
+            placeholder="email address"
             {...register("email", {
-              required: "이메일을 입력해주세요.",
+              required: "please enter your email address",
             })}
             required={true}
           />
           <input
             type="password"
-            placeholder="비밀번호"
+            placeholder="password"
             {...register("password", {
-              required: "비밀번호를 입력해주세요.",
+              required: "please enter your password",
             })}
           />
           <button type="submit">Sign Up</button>

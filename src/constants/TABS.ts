@@ -9,7 +9,7 @@ export const TABS = [
         values: ["Low", "Medium", "High"],
       },
       {
-        label: "Development of Concpet",
+        label: "Development of Concept",
         values: ["Low", "Medium", "High"],
       },
       {
