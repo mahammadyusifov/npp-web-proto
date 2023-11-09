@@ -138,14 +138,14 @@ export const cssObj = {
     margin-bottom: 0;
   `,
   footer: css`
-    width: 100%;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    background-color: ${COLORS.gray50};
-    border-radius: 0 0 5px 5px;
-  `,
+  width: 100%;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: flex;
+  background-color: ${COLORS.gray50};
+  border-radius: 0 0 5px 5px;
+`,
   footerButton: css`
     margin-right: 24px;
     background-color: ${COLORS.blue600};

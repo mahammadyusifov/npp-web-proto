@@ -40,16 +40,19 @@ export default function Index() {
     const [q, setQ] = useState<number | null>(null);
     const [B1, setB1] = useState<number | null>(null);
     const [B2, setB2] = useState<number | null>(null);
+    const [R3, setR3] = useState<number | null>(null);
   
     const handleCalculate = () => {
       const result1 = (1+y);
       const result2 = (2+x);
       const Beta1 = y + 1
       const Beta2 = x - y +1
+      const result3 = Beta1/Beta2
       setZ(result1)
       setQ(result2)
       setB1(Beta1)
       setB2(Beta2)
+      setR3(result3)
     };
 
   useEffect(() => {
@@ -237,7 +240,7 @@ export default function Index() {
               <div css={[cssObj.tabContent, cssObj.show]}>
                 <form action="" onSubmit={onSubmit}>
                   <div css={cssObj.footer}>
-                    <h1 css={title}>Calculator</h1>
+                    
                     {/* <button type="button" onClick={moveToPrevTab} css={cssObj.navigateButton}>
                       Prev
                     </button> */}
@@ -268,7 +271,7 @@ export default function Index() {
                             onChange={(e) => setY(Number(e.target.value))}
                             />
                         </label>
-                        <button onClick={handleCalculate}>Calculate</button>
+                        <button onClick={handleCalculate}>submit</button>
                         <br />
                         <br />
                         <h1>Result</h1>
@@ -280,7 +283,7 @@ export default function Index() {
                         
                         {z !== null && (
                             <div>
-                            <p>대상 시스템 신뢰도: <b>{z}/{q}</b></p>
+                            <p>대상 시스템 신뢰도: <b>{z}/{q} = {R3}</b></p>
                             </div>
                         )}
                       <div>
