@@ -1,7 +1,6 @@
 import { cssObj } from "./style";
 import Link from "next/link";
 import Logo from "@/assets/logo.svg";
-import LogoutImage from "@/assets/logout.svg";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -11,13 +10,15 @@ import { useGetProductInfo } from "@/apis/contents/useGetContent";
 import { ROUTER } from "@/constants/ROUTER";
 import { getCookie } from "@/utils/cookies";
 import { API_URL } from "@/constants/API_URL";
+import { title } from "process";
+import { isNoSubstitutionTemplateLiteral } from "typescript";
 
 export default function Index() {
   const router = useRouter();
   const fileUploadRef = useRef<HTMLInputElement>(null);
   const [activeContent, setActiveContent] = useState("Requirement Dev");
   const [valueObj, setValueObj] = useState<Record<string, string>>({});
-  const [fileName, setFileName] = useState<string>();
+//   const [fileName, setFileName] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
 
   const loadingLayerStyle: React.CSSProperties = {
@@ -32,6 +33,24 @@ export default function Index() {
     justifyContent: 'center',
     alignItems: 'center'
   };
+
+    const [x, setX] = useState<number>(0);
+    const [y, setY] = useState<number>(0);
+    const [z, setZ] = useState<number | null>(null);
+    const [q, setQ] = useState<number | null>(null);
+    const [B1, setB1] = useState<number | null>(null);
+    const [B2, setB2] = useState<number | null>(null);
+  
+    const handleCalculate = () => {
+      const result1 = (1+y);
+      const result2 = (2+x);
+      const Beta1 = y + 1
+      const Beta2 = x - y +1
+      setZ(result1)
+      setQ(result2)
+      setB1(Beta1)
+      setB2(Beta2)
+    };
 
   useEffect(() => {
     const obj: Record<string, string> = {};
@@ -51,21 +70,7 @@ export default function Index() {
     }
   }, [router]);
 
-  const showContent = (
-    value:
-      | "Requirement Dev"
-      | "Requirement V&V"
-      | "Design Dev"
-      | "Design V&V"
-      | "Implementation Dev"
-      | "Implementation V&V"
-      | "Test Dev"
-      | "Test V&V"
-      | "Installlation and Checkout Dev"
-      | "Installlation and Checkout V&V"
-  ) => {
-    setActiveContent(value);
-  };
+
 
   const moveToPrevTab = () => {
     const currentIndex = TABS.findIndex(tab => tab.label === activeContent);
@@ -103,13 +108,7 @@ export default function Index() {
     }));
   };
 
-  const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
 
-    if (e.target.files) {
-      setFileName(e.target.files[0].name);
-    }
-  };
 
   const postTabValues = async (data: Record<string, Record<string, string>>) => {
     setIsLoading(true);
@@ -172,8 +171,8 @@ export default function Index() {
       const resultData = await postTabValues(allTabValues);
 
       router.push({
-        pathname: ROUTER.RESULT,
-        query: { data: JSON.stringify(resultData) }
+        // pathname: ROUTER.RESULT,
+        // query: { data: JSON.stringify(resultData) }
       });
     } catch (error) {
       console.error("Error posting data", error);
@@ -183,11 +182,11 @@ export default function Index() {
 
   return (
     <>
-      {isLoading && (
+      {/* {isLoading && (
         <div style={loadingLayerStyle}>
           <p>Loading...</p>
         </div>
-      )}
+      )} */}
         <header css={cssObj.header}>
           <div css={cssObj.container}>
             <div>
@@ -209,43 +208,22 @@ export default function Index() {
                 </button>
               </nav>
             </div>
-            <Link href={ROUTER.SIGN_IN}>
-              <LogoutImage />
-            </Link>
           </div>
         </header>
 
         <section
-          id="bayesian-title-section"
-          css={[cssObj.container, cssObj.bayesianTitleSection]}
+          id="sst-title-section"
+          css={[cssObj.container, cssObj.sstTitleSection]}
         >
-          <h1 css={cssObj.title}>Bayesian</h1>
+          <h1 css={cssObj.title}>Statistical Methods</h1>
         </section>
 
-        <section css={[cssObj.container, cssObj.scv]}>
-          <p>Bayesian Input File</p>
-          <div css={cssObj.fileUplaodForm}>
-            <div css={cssObj.filebox}>
-              <label>
-                <div>{fileName ?? "Choose file"}</div>
-              </label>
-              <input
-                type="file"
-                css={cssObj.uploadFile}
-                ref={fileUploadRef}
-                onChange={onChangeFile}
-              />
-            </div>
-
-            <button onClick={() => fileUploadRef.current?.click()}>Browse</button>
-            <button type="submit">Upload</button>
-          </div>
-        </section>
+   
 
         <section css={cssObj.tabs}>
           <div css={cssObj.container}>
             <ul>
-              {TABS.map((tab) => (
+              {/* {TABS.map((tab) => (
                 <li
                   key={`tab-${tab.label}`}
                   css={activeContent === tab.label ? cssObj.activeTab : {}}
@@ -253,52 +231,66 @@ export default function Index() {
                 >
                   {tab.label}
                 </li>
-              ))}
+              ))} */}
             </ul>
             <div>
               <div css={[cssObj.tabContent, cssObj.show]}>
                 <form action="" onSubmit={onSubmit}>
                   <div css={cssObj.footer}>
-                    <button type="button" onClick={moveToPrevTab} css={cssObj.navigateButton}>
+                    <h1 css={title}>Calculator</h1>
+                    {/* <button type="button" onClick={moveToPrevTab} css={cssObj.navigateButton}>
                       Prev
-                    </button>
-                    <button type="button" data-button="next" onClick={moveToNextTab} css={cssObj.navigateButton}>
+                    </button> */}
+                    {/* <button type="button" data-button="next" onClick={moveToNextTab} css={cssObj.navigateButton}>
                       Next
-                    </button>
-                    <button type="submit" css={cssObj.footerButton}>
+                    </button> */}
+                    {/* <button type="submit" css={cssObj.footerButton}>
                       Submit
-                    </button>
+                    </button> */}
                   </div>
                   <div css={cssObj.content}>
-                    <ul>
-                      {TABS.map((tab) =>
-                        tab.children.map((item) => (
-                          <li
-                            key={`tab-${tab.label}-items-${item.label}`}
-                            style={{
-                              display:
-                                tab.label === activeContent ? "block" : "none",
-                            }}
-                          >
-                            <label>{item.label}</label>
-                            <select
-                              name={item.label}
-                              value={allTabValues[tab.label][item.label]}
-                              onChange={onChangeTabValue}
-                            >
-                              {item.values.map((option) => (
-                                <option
-                                  value={option}
-                                  key={`tab-${tab.label}-items-${item.label}-${option}`}
-                                >
-                                  {option}
-                                </option>
-                              ))}
-                            </select>
-                          </li>
-                        )),
-                      )}
-                    </ul>
+                    <div>
+                        <h1>Input</h1>
+                        <label>
+                            Number of tests
+                            <input
+                            type="number"
+                            value={x}
+                            onChange={(e) => setX(Number(e.target.value))}
+                            />
+                        </label>
+                        <br />
+                        <label>
+                            Number of failures
+                            <input
+                            type="number"
+                            value={y}
+                            onChange={(e) => setY(Number(e.target.value))}
+                            />
+                        </label>
+                        <button onClick={handleCalculate}>Calculate</button>
+                        <br />
+                        <br />
+                        <h1>Result</h1>
+                        {B1 !== null && B2 !== null && (
+                            <div>
+                            <p>PFD에 대한 사후 분포: <b>B({B1},{B2})</b></p>
+                            </div>
+                        )}
+                        
+                        {z !== null && (
+                            <div>
+                            <p>대상 시스템 신뢰도: <b>{z}/{q}</b></p>
+                            </div>
+                        )}
+                      <div>
+                        <br/>
+                        <br/>
+                        <p>사전 확률 밀도 함수(균등 분포)에 대한 파라미터 a=b=1 와 함께 베이지안 접근법을 사용하고 n번 시험에서 실패의 개수가 x개라고 할 때, PFD에 대한 사후 분포는 <i><b>B(x+a,n-x+b)</b></i></p>
+                        <p>평균 실패 확률(대상 시스템의 신뢰도)은 사후 분포의 확률로 <i><b>(a+x)/(a+b+n)</b></i>으로 계산됨</p>
+                      </div>
+
+                    </div>
                   </div>
                 </form>
               </div>
@@ -308,3 +300,7 @@ export default function Index() {
     </>
   );
 }
+
+
+
+
