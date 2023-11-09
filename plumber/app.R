@@ -29,4 +29,4 @@ pr$registerHooks(
 )
 
 # Run the API with CORS enabled
-pr_run(pr, debug = TRUE, port = 8000)
+pr_run(pr, debug = TRUE, port = 8888)

@@ -225,4 +225,6 @@ function(req) {
     Sys.sleep(1)
     print(i)
   }
+
+  return(list("message" = "success"))
 }
