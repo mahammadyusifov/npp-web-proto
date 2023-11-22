@@ -11,7 +11,7 @@ function(req) {
   parsed_data <- fromJSON(req$postBody, flatten = TRUE)
 
 
-  # model.file <- "C:/Users/blueRab2it/Documents/Github/npp-web-proto/plumber/R2WinBUGS_Combined_Model.txt"
+  model.file <- "C:/Users/blueRab2it/Documents/Github/npp-web-proto/plumber/R2WinBUGS_Combined_Model.txt"
   source("data.R")
 
   parameters <- c(
@@ -59,8 +59,7 @@ function(req) {
     "PFD"
   )
 
-
-  FP <- parsed_data$`FP`$`FP Input`
+  FP <- as.numeric(parsed_data$`FP`$`FP Input`)
   data$SR_FP <- FP
   data$SD_FP <- FP
   data$IM_FP <- FP
@@ -202,17 +201,15 @@ function(req) {
   data$IC_VVASRG_state <- as.numeric(parsed_data$`Installlation and Checkout V&V`$`Acitivity Summary Report`)
   data$IC_VVFRG_state <- as.numeric(parsed_data$`Installlation and Checkout V&V`$`Final Report Generation`)
 
-  print(data)
+  print(data$SR_CD_state)
 
-  return(list("message" = "success"))
-
-  # "generic_FSD", "PFD"
-
+  return(list("success"))
+  
   # model.sim <- bugs(data, inits=NULL, parameters, model.file,
-  #                   n.chains=1, n.iter=20000, n.burnin=500, debug=FALSE, DIC=FALSE, n.thin=1,
+  #                   n.chains=1, n.iter=20000, n.burnin=500, debug=TRUE, DIC=FALSE, n.thin=1,
   #                   bugs.directory="C:/WinBUGS14",
   #                   working.directory="C:/WinBUGS14/bbn_Routput")
-
+  
   # defect_introduced <- model.sim[["sims.list"]][["IC_Defect_introduced_in_current"]]
 
   # df.defect_introduced <- data.frame(value=defect_introduced, defect.type="introduced")
@@ -232,6 +229,9 @@ function(req) {
 
   # df.pfd <- data.frame(value=pfd, defect.type="PFD")
   # df.pfd$iteration <- 1:nrow(df.pfd)
+
+
+  # print(model.sim[["sims.mean"]])
 
 
   # df <- rbind(df.defect_introduced, df.defect_remained)
