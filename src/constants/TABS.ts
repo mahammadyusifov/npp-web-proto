@@ -2,6 +2,10 @@
 
 export const TABS = [
   {
+    label: "FP",
+    children: [{ label: "FP Input", values: [""] }],
+  },
+  {
     label: "Requirement Dev",
     children: [
       {

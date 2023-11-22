@@ -15,7 +15,7 @@ import { API_URL } from "@/constants/API_URL";
 export default function Index() {
   const router = useRouter();
   const fileUploadRef = useRef<HTMLInputElement>(null);
-  const [activeContent, setActiveContent] = useState("Requirement Dev");
+  const [activeContent, setActiveContent] = useState("FP");
   const [valueObj, setValueObj] = useState<Record<string, string>>({});
   const [fileName, setFileName] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
@@ -53,6 +53,7 @@ export default function Index() {
 
   const showContent = (
     value:
+      | "FP"
       | "Requirement Dev"
       | "Requirement V&V"
       | "Design Dev"
@@ -85,7 +86,7 @@ export default function Index() {
   TABS.forEach((tab) => {
     const tabData: Record<string, string> = {};
     tab.children.forEach((item) => {
-      tabData[item.label] = item.values[1];
+      tabData[item.label] = item.values[0];
     });
     initialTabData[tab.label] = tabData;
   });
@@ -112,7 +113,7 @@ export default function Index() {
   };
 
   const postTabValues = async (data: Record<string, Record<string, string>>) => {
-    setIsLoading(true);
+    // setIsLoading(true);
 
     for (let key in data) {
       for (let key2 in data[key]) {
@@ -127,6 +128,10 @@ export default function Index() {
         }
       }
     }
+
+    const fpInput = document.getElementById("FPInput") as HTMLInputElement;
+    const fpInputValue = fpInput.value;
+    data["FP"]["FP Input"] = fpInputValue;
 
     try {
       // console.log(JSON.stringify(data));
@@ -159,7 +164,7 @@ export default function Index() {
       const response_data = await response;
       console.log(response_data);
 
-      setIsLoading(false);
+      // setIsLoading(false);
 
       return response_data;
     } catch (error) {
@@ -174,10 +179,10 @@ export default function Index() {
     try {
       const resultData = await postTabValues(allTabValues);
 
-      router.push({
-        pathname: ROUTER.RESULT,
-        query: { data: JSON.stringify(resultData) }
-      });
+      // router.push({
+      //   pathname: ROUTER.RESULT,
+      //   query: { data: JSON.stringify(resultData) }
+      // });
     } catch (error) {
       console.error("Error posting data", error);
     }
@@ -275,31 +280,46 @@ export default function Index() {
                   <div css={cssObj.content}>
                     <ul>
                       {TABS.map((tab) =>
-                        tab.children.map((item) => (
+                        tab.label === "FP" ? (
                           <li
-                            key={`tab-${tab.label}-items-${item.label}`}
+                            key={`tab-${tab.label}-input`}
                             style={{
-                              display:
-                                tab.label === activeContent ? "block" : "none",
+                              display: tab.label === activeContent ? "block" : "none",
                             }}
                           >
-                            <label>{item.label}</label>
-                            <select
-                              name={item.label}
-                              value={allTabValues[tab.label][item.label]}
-                              onChange={onChangeTabValue}
-                            >
-                              {item.values.map((option) => (
-                                <option
-                                  value={option}
-                                  key={`tab-${tab.label}-items-${item.label}-${option}`}
-                                >
-                                  {option}
-                                </option>
-                              ))}
-                            </select>
+                            <label>{tab.label}</label>
+                            <input
+                              id="FPInput"
+                              type="text"
+                              name="FPInput"
+                            />
                           </li>
-                        )),
+                        ) : (
+                          tab.children.map((item) => (
+                            <li
+                              key={`tab-${tab.label}-items-${item.label}`}
+                              style={{
+                                display: tab.label === activeContent ? "block" : "none",
+                              }}
+                            >
+                              <label>{item.label}</label>
+                              <select
+                                name={item.label}
+                                value={allTabValues[tab.label][item.label]}
+                                onChange={onChangeTabValue}
+                              >
+                                {item.values.map((option) => (
+                                  <option
+                                    value={option}
+                                    key={`tab-${tab.label}-items-${item.label}-${option}`}
+                                  >
+                                    {option}
+                                  </option>
+                                ))}
+                              </select>
+                            </li>
+                          ))
+                        )
                       )}
                     </ul>
                   </div>

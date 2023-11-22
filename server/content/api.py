@@ -26,11 +26,12 @@ def winbugs(request: dict):
     response_handler = ResponseHandler()
     print(">>>>> api call")
 
-    # print(request["data"])
+    data = json.loads(request["data"])
 
-    res = requests.get("http://127.0.0.1:8888/content/common", params=request["data"])
+    print(data)
+
+    res = requests.post("http://127.0.0.1:8888/content/common", json=data)
     response = json.loads(res.text)
-
 
     print(response)
 
