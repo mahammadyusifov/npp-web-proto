@@ -222,7 +222,7 @@ function(req) {
 #* Test API
 #* @get /content/common2
 function(req) {
-  for (i in 1:50) {
+  for (i in 1:10) {
     Sys.sleep(1)
     print(i)
   }

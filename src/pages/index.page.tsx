@@ -129,8 +129,23 @@ export default function Index() {
     }
 
     try {
-      // const response = await axios.post(API_URL.CONTENT.COMMON2,
-      //   data,
+      console.log(data);
+
+      const response = await axios.post(API_URL.CONTENT.COMMON,
+        data,
+        {
+          timeout: 60 * 4 * 1000,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+            "Access-Control-Allow-Headers":
+              "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
+          }
+        }
+      );
+
+      // const response = await axios.get(API_URL.CONTENT.COMMON2,
       //   {
       //     timeout: 60 * 4 * 1000,
       //     headers: {
@@ -143,18 +158,8 @@ export default function Index() {
       //   }
       // );
 
-      const response = await axios.get(API_URL.CONTENT.COMMON2,
-        {
-          timeout: 60 * 4 * 1000,
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": "true",
-            "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
-            "Access-Control-Allow-Headers":
-              "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
-          }
-        }
-      );
+      const response_data = await response;
+      console.log(response_data);
 
       setIsLoading(false);
 
