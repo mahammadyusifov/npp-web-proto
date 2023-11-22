@@ -4,10 +4,11 @@ library("jsonlite")
 library("R2WinBUGS")
 
 #* Estimate using WinBUGS
-#* @post /content/common
+#* @get /content/common
 #* @param req
 function(req) {
-  parsed_data <- fromJSON(req$postBody, flatten = TRUE)
+  # parsed_data <- fromJSON(req$postBody, flatten = TRUE)
+  parsed_data <- req
 
   model.file <- "C:/Users/blueRab2it/Documents/Github/npp-web-proto/plumber/R2WinBUGS_Combined_Model.txt"
   source("data.R")
@@ -52,7 +53,9 @@ function(req) {
     "IC_VVM_post",
     "IC_VVL_post",
     "IC_Total_Remained_Defect",
-    "IC_Defect_introduced_in_current"
+    "IC_Defect_introduced_in_current",
+    "generic_FSD",
+    "PFD"
   )
 
 
@@ -197,6 +200,10 @@ function(req) {
   data$IC_RAVV_state <- as.numeric(parsed_data$`Installlation and Checkout V&V`$`Risk Analysis`)
   data$IC_VVASRG_state <- as.numeric(parsed_data$`Installlation and Checkout V&V`$`Acitivity Summary Report`)
   data$IC_VVFRG_state <- as.numeric(parsed_data$`Installlation and Checkout V&V`$`Final Report Generation`)
+
+  # print(data)
+
+  return(list("message" = "success"))
 
   model.sim <- bugs(data, inits=NULL, parameters, model.file,
                     n.chains=1, n.iter=20000, n.burnin=500, debug=FALSE, DIC=FALSE, n.thin=1,

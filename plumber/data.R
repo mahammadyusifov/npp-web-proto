@@ -58,6 +58,7 @@ data <- list(
     SR_SDP_state=2, SR_CD_state=2, SR_SRS_state=2, SR_TA_state=2, SR_CA_state=3,
     SR_HA_state=2, SR_SA_state=3, SR_RA_state=3, SR_SQTPG_state=2, SR_SATPG_state=2,
     SR_CM_state=2, SR_RaA_state=2,
+    generic_SR_SDP_state=2, generic_SR_CD_state=2, generic_SR_SRS_state=2, generic_SR_TA_state=2, generic_SR_CA_state=2, generic_SR_HA_state=2, generic_SR_SA_state=2, generic_SR_RA_state=2, generic_SR_SQTPG_state=2, generic_SR_SATPG_state=2, generic_SR_CM_state=2, generic_SR_RaA_state=2,
 
 
     # V&V Attribute model - Requirement phase
@@ -130,6 +131,7 @@ data <- list(
     SR_SVVP_state=2, SR_CDE_state=2, SR_HRAA_state=3, SR_SRE_state=2, SR_IAVV_state=2,
     SR_TAVV_state=2, SR_CAVV_state=3, SR_HAVV_state=3, SR_SAVV_state=3, SR_RAVV_state=3,
     SR_VVSQTPG_state=3, SR_VVSATPG_state=3, SR_CMA_state=2, SR_RaAVV_state=3, SR_VVASRG_state=2,
+    generic_SR_SVVP_state=2, generic_SR_CDE_state=2, generic_SR_HRAA_state=2, generic_SR_SRE_state=2, generic_SR_IAVV_state=2, generic_SR_TAVV_state=2, generic_SR_CAVV_state=2, generic_SR_HAVV_state=2, generic_SR_SAVV_state=2, generic_SR_RAVV_state=2, generic_SR_VVSQTPG_state=2, generic_SR_VVSATPG_state=2, generic_SR_CMA_state=2, generic_SR_RaAVV_state=2, generic_SR_VVASRG_state=2,
 
 
     # Submodel - Requirement phase
@@ -148,6 +150,7 @@ data <- list(
 
     # number of function points (same in all phases)
     SR_FP=56,
+    generic_SR_FP=50,
 
 
     # Dev Attribute model - Design phase
@@ -220,6 +223,7 @@ data <- list(
     SD_SAD_state=2, SD_SDD_state=2, SD_TA_state=2, SD_CA_state=3, SD_HA_state=2,
     SD_SA_state=3, SD_RA_state=3, SD_SCTPG_state=2, SD_SITPG_state=2, SD_SCTDG_state=2,
     SD_SITDG_state=2, SD_SQTDG_state=2, SD_SATDG_state=2, SD_CM_state=2, SD_RaA_state=2,
+    generic_SD_SAD_state=2, generic_SD_SDD_state=2, generic_SD_TA_state=2, generic_SD_CA_state=2, generic_SD_HA_state=2, generic_SD_SA_state=2, generic_SD_RA_state=2, generic_SD_SCTPG_state=2, generic_SD_SITPG_state=2, generic_SD_SCTDG_state=2, generic_SD_SITDG_state=2, generic_SD_SQTDG_state=2, generic_SD_SATDG_state=2, generic_SD_CM_state=2, generic_SD_RaA_state=2,
 
 
     # V&V Attribute model - Design phase
@@ -297,6 +301,7 @@ data <- list(
     SD_SAVV_state=3, SD_RAVV_state=3, SD_VVSCTPG_state=3, SD_VVSITPG_state=3, SD_VVSCTDG_state=3,
     SD_VVSITDG_state=3, SD_VVSQTDG_state=3, SD_VVSATDG_state=3, SD_CMVV_state=2, SD_RaAVV_state=2,
     SD_VVASRG_state=2,
+    generic_SD_DE_state=2, generic_SD_IAVV_state=2, generic_SD_TAVV_state=2, generic_SD_CAVV_state=2, generic_SD_HAVV_state=2, generic_SD_SAVV_state=2, generic_SD_RAVV_state=2, generic_SD_VVSCTPG_state=2, generic_SD_VVSITPG_state=2, generic_SD_VVSCTDG_state=2, generic_SD_VVSITDG_state=2, generic_SD_VVSQTDG_state=2, generic_SD_VVSATDG_state=2, generic_SD_CMVV_state=2, generic_SD_RaAVV_state=2, generic_SD_VVASRG_state=2,
 
 
     # Submodel - Design phase
@@ -319,6 +324,7 @@ data <- list(
 
     # number of function points (same in all phases)
     SD_FP=56,
+    generic_SD_FP=50,
 
 
     # Dev Attribute model - Implementation phase
@@ -396,6 +402,7 @@ data <- list(
     IM_RA_state=3, IM_CTCG_state=2, IM_SITCG_state=2, IM_SQTCG_state=2, IM_SATCG_state=2,
     IM_SCTPG_state=2, IM_SITPG_state=2, IM_SQTPG_state=2, IM_CM_state=2, IM_RaA_state=2,
     IM_SCTE_state=2,
+    generic_IM_SCaSCDG_state=2, generic_IM_TA_state=2, generic_IM_CA_state=2, generic_IM_HA_state=2, generic_IM_SA_state=2, generic_IM_RA_state=2, generic_IM_CTCG_state=2, generic_IM_SITCG_state=2, generic_IM_SQTCG_state=2, generic_IM_SATCG_state=2, generic_IM_SCTPG_state=2, generic_IM_SITPG_state=2, generic_IM_SQTPG_state=2, generic_IM_CM_state=2, generic_IM_RaA_state=2, generic_IM_SCTE_state=2,
 
 
     # V&V Attribute model - Implementation phase
@@ -481,6 +488,7 @@ data <- list(
     IM_SAVV_state=3, IM_RAVV_state=3, IM_VVSCTCG_state=3, IM_VVSITCG_state=3, IM_VVSQTCG_state=3,
     IM_VVSATCG_state=3, IM_VVSCTPG_state=3, IM_VVSITPG_state=3, IM_VVSQTPG_state=3, IM_VVSCTE_state=3,
     IM_CMVV_state=2, IM_RaAVV_state=2, IM_VVASRG_state=3,
+    generic_IM_SCaSCDE_state=2, generic_IM_IAVV_state=2, generic_IM_TAVV_state=2, generic_IM_CAVV_state=2, generic_IM_HAVV_state=2, generic_IM_SAVV_state=2, generic_IM_RAVV_state=2, generic_IM_VVSCTCG_state=2, generic_IM_VVSITCG_state=2, generic_IM_VVSQTCG_state=2, generic_IM_VVSATCG_state=2, generic_IM_VVSCTPG_state=2, generic_IM_VVSITPG_state=2, generic_IM_VVSQTPG_state=2, generic_IM_VVSCTE_state=2, generic_IM_CMVV_state=2, generic_IM_RaAVV_state=2, generic_IM_VVASRG_state=2,
 
 
     # Submodel - Implementation phase
@@ -507,6 +515,7 @@ data <- list(
 
     # number of function points (same in all phases)
     IM_FP=56,
+    generic_IM_FP=50,
 
 
     # Dev Attribute model - Test phase
@@ -558,6 +567,7 @@ data <- list(
     # state of attribute: 1 -> High, 2 -> Medium, 3 -> Low
     ST_SITE_state=2, ST_SQTE_state=2, ST_SAPG_state=2, ST_SATE_state=2, ST_TA_state=2,
     ST_HA_state=3, ST_SA_state=3, ST_RA_state=3, ST_CM_state=2, ST_RaA_state=2,
+    generic_ST_SITE_state=2, generic_ST_SQTE_state=2, generic_ST_SAPG_state=2, generic_ST_SATE_state=2, generic_ST_TA_state=2, generic_ST_HA_state=2, generic_ST_SA_state=2, generic_ST_RA_state=2, generic_ST_CM_state=2, generic_ST_RaA_state=2,
 
 
     # V&V Attribute model - Test phase
@@ -614,6 +624,7 @@ data <- list(
     ST_VVSITE_state=3, ST_VVSQTE_state=3, ST_VVSAPG_state=3, ST_VVSATE_state=3, ST_TAVV_state=3,
     ST_HAVV_state=3, ST_SAVV_state=3, ST_RAVV_state=3, ST_CMVV_state=3, ST_RaAVV_state=3,
     ST_VVASRG_state=3,
+    generic_ST_VVSITE_state=2, generic_ST_VVSQTE_state=2, generic_ST_VVSAPG_state=2, generic_ST_VVSATE_state=2, generic_ST_TAVV_state=2, generic_ST_HAVV_state=2, generic_ST_SAVV_state=2, generic_ST_RAVV_state=2, generic_ST_CMVV_state=2, generic_ST_RaAVV_state=2, generic_ST_VVASRG_state=2,
 
 
     # Submodel - Test phase
@@ -656,6 +667,7 @@ data <- list(
 
     # number of function points (same in all phases)
     ST_FP=56,
+    generic_ST_FP=50,
 
 
     # Dev Attribute model - Installation & Checkout phase
@@ -686,6 +698,7 @@ data <- list(
 
     # state of attribute: 1 -> High, 2 -> Medium, 3 -> Low
     IC_IPG_state=2, IC_IaC_state=2, IC_HA_state=2, IC_SA_state=2, IC_RA_state=2,
+    generic_IC_IPG_state=2, generic_IC_IaC_state=2, generic_IC_HA_state=2, generic_IC_SA_state=2, generic_IC_RA_state=2,
 
 
     # V&V Attribute model - Installation & Checkout phase
@@ -724,6 +737,7 @@ data <- list(
 
     # state of attribute: 1 -> High, 2 -> Medium, 3 -> Low
     IC_ICAVV_state=2, IC_ICVV_state=2, IC_HAVV_state=2, IC_SAVV_state=2, IC_RAVV_state=2, IC_VVASRG_state=2, IC_VVFRG_state=2,
+    generic_IC_ICAVV_state=2, generic_IC_ICVV_state=2, generic_IC_HAVV_state=2, generic_IC_SAVV_state=2, generic_IC_RAVV_state=2, generic_IC_VVASRG_state=2, generic_IC_VVFRG_state=2,
 
 
     # Submodel - Installation & Checkout phase
@@ -749,5 +763,6 @@ data <- list(
     # IC_VVH=0, IC_VVM=1, IC_VVL=0,
 
     # number of function points (same in all phases)
-    IC_FP=56
+    IC_FP=56,
+    generic_IC_FP=50
 )
