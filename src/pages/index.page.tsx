@@ -134,7 +134,7 @@ export default function Index() {
     data["FP"]["FP Input"] = fpInputValue;
 
     try {
-      // console.log(JSON.stringify(data));
+      console.log(data)
 
       const response = await axios.post(API_URL.CONTENT.COMMON, {
         data: JSON.stringify(data),

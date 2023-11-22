@@ -67,7 +67,7 @@ function(req) {
   data$IC_FP <- FP
 
   data$SR_SDP_state <- as.numeric(parsed_data$`Requirement Dev`$`Software Development Planning`)
-  data$SR_CD_state <- as.numeric(parsed_data$`Requirement Dev`$`Development of Concpet`)
+  data$SR_CD_state <- as.numeric(parsed_data$`Requirement Dev`$`Development of Concept`)
   data$SR_SRS_state <- as.numeric(parsed_data$`Requirement Dev`$`Development of SRS`)
   data$SR_TA_state <- as.numeric(parsed_data$`Requirement Dev`$`Traceability Analysis`)
   data$SR_CA_state <- as.numeric(parsed_data$`Requirement Dev`$`Criticality Analysis`)
@@ -204,12 +204,12 @@ function(req) {
   print(data$SR_CD_state)
 
   return(list("success"))
-  
+
   # model.sim <- bugs(data, inits=NULL, parameters, model.file,
   #                   n.chains=1, n.iter=20000, n.burnin=500, debug=TRUE, DIC=FALSE, n.thin=1,
   #                   bugs.directory="C:/WinBUGS14",
   #                   working.directory="C:/WinBUGS14/bbn_Routput")
-  
+
   # defect_introduced <- model.sim[["sims.list"]][["IC_Defect_introduced_in_current"]]
 
   # df.defect_introduced <- data.frame(value=defect_introduced, defect.type="introduced")
