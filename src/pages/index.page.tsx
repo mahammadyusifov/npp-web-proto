@@ -129,7 +129,7 @@ export default function Index() {
     }
 
     try {
-      console.log(JSON.stringify(data));
+      // console.log(JSON.stringify(data));
 
       const response = await axios.post(API_URL.CONTENT.COMMON, {
         data: JSON.stringify(data),
@@ -161,7 +161,7 @@ export default function Index() {
 
       setIsLoading(false);
 
-      return response.data;
+      return response_data;
     } catch (error) {
       console.error("Error Axios", error);
       setIsLoading(false);

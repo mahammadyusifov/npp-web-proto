@@ -13,17 +13,23 @@ import { DUMMY_RESULT } from "@/constants/DUMMY_RESULT";
 
 export default function Result() {
   const router = useRouter();
-  // const resultData = router.query.data ? JSON.parse(router.query.data as string) : null;
+  const result = router.query.data ? JSON.parse(router.query.data as string) : null;
+  console.log(result);
 
   // dummy data
-  const resultData = DUMMY_RESULT;
+  const resultData: {
+    value: number;
+    "defect.type": string;
+    iteration: number;
+  }[] = result.data[0];
 
   let defect_introduced: [string, number][] = [];
   let defect_remained: [string, number][] = [];
+  let generic_fsd: [string, number][] = [];
+  let pfd: [string, number][] = [];
 
   resultData.forEach(item => {
     const iteration = String(item.iteration);
-    // const iteration = "";
     const value = item.value;
 
     if (item["defect.type"] === "introduced") {
@@ -32,6 +38,25 @@ export default function Result() {
 
     if (item["defect.type"] === "remained") {
       defect_remained.push([iteration, value]);
+    }
+  });
+
+  const resultData2: {
+    value: number;
+    "defect.type": string;
+    iteration: number;
+  }[] = result.data[1];
+
+  resultData2.forEach(item => {
+    const iteration = String(item.iteration);
+    const value = item.value;
+
+    if (item["defect.type"] === "generic_FSD") {
+      generic_fsd.push([iteration, value]);
+    }
+
+    if (item["defect.type"] === "PFD") {
+      pfd.push([iteration, value]);
     }
   });
 
@@ -99,6 +124,47 @@ export default function Result() {
           data={[["Iterations", "Values"], ...defect_remained]}
           options={{
             title: "IC_Total_Remained_Defect",
+            titleTextStyle: { color: "#111827", fontSize: 12 },
+            colors: ["#2563EB"],
+            areaOpacity: 0.05,
+            chartArea: { width: 1090, left: 30, top: 20 },
+            hAxis: { textStyle: { color: "#9AA1A9" } },
+            vAxis: { textStyle: { color: "#9AA1A9" } },
+          }}
+        />
+      </section>
+
+      <section css={[cssObj.container, cssObj.chart]}>
+
+        <div>
+          <span css={cssObj.meantext}>MEAN:</span>
+          <span css={cssObj.meannum}>14.05</span>
+        </div>
+
+        <Chart
+          chartType="AreaChart"
+          data={[["Iterations", "Values"], ...generic_fsd]}
+          options={{
+            title: "Generic FSD",
+            titleTextStyle: { color: "#111827", fontSize: 12 },
+            colors: ["#2563EB"],
+            areaOpacity: 0.05,
+            chartArea: { width: 1090, left: 30, top: 20 },
+            hAxis: { textStyle: { color: "#9AA1A9" } },
+            vAxis: { textStyle: { color: "#9AA1A9" } },
+          }}
+        />
+
+        <div>
+          <span css={cssObj.meantext}>MEAN:</span>
+          <span css={cssObj.meannum}>11.05</span>
+        </div>
+
+        <Chart
+          chartType="AreaChart"
+          data={[["Iterations", "Values"], ...pfd]}
+          options={{
+            title: "PFD",
             titleTextStyle: { color: "#111827", fontSize: 12 },
             colors: ["#2563EB"],
             areaOpacity: 0.05,

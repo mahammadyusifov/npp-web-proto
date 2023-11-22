@@ -19,7 +19,7 @@ cors <- function(req, res) {
 
 
 # Create a new Plumber router
-pr <- pr("./plumber.R")
+pr <- pr("./plumber/plumber.R")
 
 # Register the CORS middleware
 pr$registerHooks(
