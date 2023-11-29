@@ -31,6 +31,27 @@ This will guide you to the sign-in page. Enter your **Email Address** and **Pass
 <img src="./images/sign-in_page_view.png" width=50%>
 
 ## Submit activity evaluation results for Bayesian Method
+Click the **Bayesian Methods** tab to start entering software-specific information including the **Number of Function Points (FP)** and **Development and V&V Activity Evaluation Results**.
+
+![](./images/main_page_click_bbn_view.png)
+
+### Number of Function Points (FP)
+The number of Function Points (FP) is a measure of the software’s size and complexity. To estimate the number of FPs, please refer to **Table 8-10 "Ratios of Source-code Statements to Function Points for Selected Programming Languages"** in the **U.S.NRC report [1]**.
+
+1. Enter the **Number of FPs**
+2. Click the **Next** button to proceed.
+
+![](./images/main_page_FP_view.png)
+
+### Development and V&V activity evaluation results
+To proceed development and V&V activity evaluation, please refer to **Section 4.2.1 "Attribute Nodes"** and **Appendix B "Detailed Attributes of All Phases"** in the **U.S.NRC report [1]**.
+
+> Activity Quality is represented by 3 states: "High", "Medium", and "Low".
+1. Enter the activity qualities by drop-down list.
+2. Click the **Prev** and **Next** button to go to the previous/next section.
+3. After you finish entering the data, click the **Submit** button to submit your results.
+
+![](./images/main_page_attribute_view.png)
 
 ## Submit test results for Statistical Method
 
