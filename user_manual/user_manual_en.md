@@ -54,9 +54,10 @@ To proceed development and V&V activity evaluation, please refer to **Section 4.
 ![](./images/main_page_attribute_view.png)
 
 ## Submit test results for Statistical Method
-1. Enter the **number of executed tests** and the **number of failures**
-2. Click the **submit** button to obtain the estimated reliability.
-3. View the estimated reliability using statistical testing.
+1. Click the **Statistical Methods** tab to start entering testing results.
+2. Enter the **number of executed tests** and the **number of failures**.
+3. Click the **submit** button to obtain the estimated reliability.
+4. View the estimated reliability using statistical testing.
 
 ![](./images/sst_page_view.png)
 
@@ -64,9 +65,8 @@ To proceed development and V&V activity evaluation, please refer to **Section 4.
 After submitting the results, you can view the estimated reliability results, specifically the **mean** values and **Markov chain Monte Carlo (MCMC) simulation traces** of the following reliability metrics:
 
 - Probability of Failure on Demand (PFD): probablity that safety software failed to take action when the demand condition is satisfied
-    - Demand is a plant condition that requires the actuation of safety systems
+    - Demand is a plant condition that requires the actuation of safety systems.
     - Eg. demand in reactor protection system: the condition that the trip signal should be produced
-
 
 - Number of remaining faults
 
