@@ -10,8 +10,10 @@ function(req) {
   print(">>>>>> api call")
   parsed_data <- fromJSON(req$postBody, flatten = TRUE)
 
-
-  model.file <- "C:/Users/blueRab2it/Documents/Github/npp-web-proto/plumber/R2WinBUGS_Combined_Model.txt"
+  cur_dir <- getwd()
+  model_dir <- "/R2WinBUGS_Combined_Model.txt"
+  concat_dir <- paste(cur_dir, model_dir, sep = "")
+  model.file <- concat_dir
   source("data.R")
 
   parameters <- c(
@@ -201,44 +203,48 @@ function(req) {
   data$IC_VVASRG_state <- as.numeric(parsed_data$`Installlation and Checkout V&V`$`Acitivity Summary Report`)
   data$IC_VVFRG_state <- as.numeric(parsed_data$`Installlation and Checkout V&V`$`Final Report Generation`)
 
-  print(data$SR_CD_state)
+  # print(data$SR_CD_state)
 
-  return(list("success"))
+  # return(list("success"))
 
-  # model.sim <- bugs(data, inits=NULL, parameters, model.file,
-  #                   n.chains=1, n.iter=20000, n.burnin=500, debug=TRUE, DIC=FALSE, n.thin=1,
-  #                   bugs.directory="C:/WinBUGS14",
-  #                   working.directory="C:/WinBUGS14/bbn_Routput")
+  model.sim <- bugs(data, inits=NULL, parameters, model.file,
+                    n.chains=1, n.iter=20000, n.burnin=500, debug=FALSE, DIC=FALSE, n.thin=1,
+                    bugs.directory="C:/WinBUGS14",
+                    working.directory="C:/WinBUGS14/bbn_Routput")
 
-  # defect_introduced <- model.sim[["sims.list"]][["IC_Defect_introduced_in_current"]]
+  defect_introduced <- model.sim[["sims.list"]][["IC_Defect_introduced_in_current"]]
 
-  # df.defect_introduced <- data.frame(value=defect_introduced, defect.type="introduced")
-  # df.defect_introduced$iteration <- 1:nrow(df.defect_introduced)
+  df.defect_introduced <- data.frame(value=defect_introduced, defect.type="introduced")
+  df.defect_introduced$iteration <- 1:nrow(df.defect_introduced)
 
-  # defect_remained <- model.sim[["sims.list"]][["IC_Total_Remained_Defect"]]
+  defect_remained <- model.sim[["sims.list"]][["IC_Total_Remained_Defect"]]
 
-  # df.defect_remained <- data.frame(value=defect_remained, defect.type="remained")
-  # df.defect_remained$iteration <- 1:nrow(df.defect_remained)
+  df.defect_remained <- data.frame(value=defect_remained, defect.type="remained")
+  df.defect_remained$iteration <- 1:nrow(df.defect_remained)
 
-  # generic_fsd <- model.sim[["sims.list"]][["generic_FSD"]]
+  generic_fsd <- model.sim[["sims.list"]][["generic_FSD"]]
 
-  # df.generic_fsd <- data.frame(value=generic_fsd, defect.type="generic_FSD")
-  # df.generic_fsd$iteration <- 1:nrow(df.generic_fsd)
+  df.generic_fsd <- data.frame(value=generic_fsd, defect.type="generic_FSD")
+  df.generic_fsd$iteration <- 1:nrow(df.generic_fsd)
 
-  # pfd <- model.sim[["sims.list"]][["PFD"]]
+  pfd <- model.sim[["sims.list"]][["PFD"]]
 
-  # df.pfd <- data.frame(value=pfd, defect.type="PFD")
-  # df.pfd$iteration <- 1:nrow(df.pfd)
-
-
-  # print(model.sim[["sims.mean"]])
+  df.pfd <- data.frame(value=pfd, defect.type="PFD")
+  df.pfd$iteration <- 1:nrow(df.pfd)
 
 
-  # df <- rbind(df.defect_introduced, df.defect_remained)
+  print(model.sim)
 
-  # df2 <- rbind(df.generic_fsd, df.pfd)
+  print("===============================")
 
-  # return(list(df, df2))
+  print(model.sim[["mean"]])
+
+
+  df <- rbind(df.defect_introduced, df.defect_remained)
+
+  df2 <- rbind(df.generic_fsd, df.pfd)
+
+  return(list(df, df2, model.sim[["mean"]][["IC_Total_Remained_Defect"]], model.sim[["mean"]][["PFD"]]))
 }
 
 

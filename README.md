@@ -99,7 +99,7 @@ pip install -r requirements.txt
 
 ```bash
 cd server
-uvicorn main:app --reload --host=0.0.0.0 --port=8000 # FastAPI APP will now be running on '0.0.0.0:8000'.
+uvicorn main:app --reload --host=127.0.0.1 --port=8000 # FastAPI APP will now be running on '127.0.0.1:8000'.
 ```
 
 ### Key Dependencies Overview
@@ -139,7 +139,7 @@ or using '\_init/init.R'
 Execute the following command in the R console:
 
 ```bash
-source('./plumber/app.R') # PlumberAPI server will now be running on '127.0.0.1:8000'.
+Rscript ./plumber/app.R # PlumberAPI server will now be running on '127.0.0.1:8000'.
 ```
 
 <hr/>

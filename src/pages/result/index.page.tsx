@@ -28,6 +28,9 @@ export default function Result() {
   let generic_fsd: [string, number][] = [];
   let pfd: [string, number][] = [];
 
+  const mean_remained: number = result.data[2][0];
+  const mean_pfd: number = result.data[3][0];
+
   resultData.forEach(item => {
     const iteration = String(item.iteration);
     const value = item.value;
@@ -96,7 +99,7 @@ export default function Result() {
       <section css={[cssObj.container, cssObj.chart]}>
         <div>
           <span css={cssObj.meantext}>MEAN:</span>
-          <span css={cssObj.meannum}>11.05</span>
+          <span css={cssObj.meannum}>{mean_remained}</span>
         </div>
 
         <Chart
@@ -115,7 +118,7 @@ export default function Result() {
 
         <div>
           <span css={cssObj.meantext}>MEAN:</span>
-          <span css={cssObj.meannum}>11.05</span>
+          <span css={cssObj.meannum}>{mean_pfd}</span>
         </div>
 
         <Chart

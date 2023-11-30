@@ -113,7 +113,7 @@ export default function Index() {
   };
 
   const postTabValues = async (data: Record<string, Record<string, string>>) => {
-    // setIsLoading(true);
+    setIsLoading(true);
 
     for (let key in data) {
       for (let key2 in data[key]) {
@@ -164,7 +164,7 @@ export default function Index() {
       const response_data = await response;
       console.log(response_data);
 
-      // setIsLoading(false);
+      setIsLoading(false);
 
       return response_data;
     } catch (error) {
@@ -179,10 +179,10 @@ export default function Index() {
     try {
       const resultData = await postTabValues(allTabValues);
 
-      // router.push({
-      //   pathname: ROUTER.RESULT,
-      //   query: { data: JSON.stringify(resultData) }
-      // });
+      router.push({
+        pathname: ROUTER.RESULT,
+        query: { data: JSON.stringify(resultData) }
+      });
     } catch (error) {
       console.error("Error posting data", error);
     }
