@@ -14,7 +14,11 @@ import { DUMMY_RESULT } from "@/constants/DUMMY_RESULT";
 export default function Result() {
   const router = useRouter();
   const result = router.query.data ? JSON.parse(router.query.data as string) : null;
-  console.log(result);
+
+  if (!result || !result.data || result.data.length < 4) {
+  console.error("Data is missing or incorrectly structured");
+  return null; // Handle the case when data is missing or malformed
+  }
 
   // dummy data
   const resultData: {

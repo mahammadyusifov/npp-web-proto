@@ -21,6 +21,7 @@ export default function SignUp() {
   } = useForm<FormValues>();
 
   const onSubmit = handleSubmit((data) => {
+    console.log("Sending data:" , data);
     fetch(API_URL.AUTH.REGISTER, {
       method: "POST",
       headers: {
