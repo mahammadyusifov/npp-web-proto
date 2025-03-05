@@ -93,6 +93,7 @@ export const cssObj = {
     display: none;
   `,
   tabs: css`
+    margin-top: 30px;
     background-color: ${COLORS.gray100};
     width: 100vw;
     height: calc(100vh - (60px + 94.5px + 58.09px + 45px));
@@ -108,7 +109,7 @@ export const cssObj = {
     }
     & > div > ul > li {
       padding-bottom: 16px;
-      cursor: pointer;
+      cursor: default;
       color: ${COLORS.gray600};
     }
     & > div > ul > li.active {
@@ -124,7 +125,8 @@ export const cssObj = {
     font-weight: bold;
   `,
   tabContent: css`
-    display: none;
+    display: flex;
+    flexDirection : column;
 
     & > div .tab-content.show {
       display: block;
@@ -201,7 +203,7 @@ export const cssObj = {
       margin-right: 16px;
     }
   `,
-  bayesianTitleSection: css`
+  settingsTitleSection: css`
     margin-top: 30px;
   `,
   rightSection: {
@@ -215,5 +217,64 @@ export const cssObj = {
     padding: '8px 16px',
     borderRadius: '4px',
     cursor: 'pointer',
+  },
+
+  listItem : {
+    display: 'flex',              // Flexbox to align label and input side by side
+    alignItems: 'center',         // Vertically center them
+    justifyContent: 'flex-start', // Align items to the start of the container
+    flexWrap: 'nowrap',           // Prevent wrapping to the next line
+    width: '100%',                // Ensure full width is used, preventing overflow
+    position: 'relative',        // Allows fine-tuning with "top"
+    top: '-40px',                // Moves labels & inputs **up** within the container
+  },
+
+  // Add this to your cssObj
+  inputBox: css`
+  padding: 5px;
+  margin-left: 0.5cm;
+  border-radius: 4px;
+  border: 1px solid ${COLORS.gray300};
+  min-width: 70px; // Minimum width for small values
+  transition: width 0.2s ease; // Smooth transition for width changes
+
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  &[type='number']::-webkit-outer-spin-button,
+  &[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+`,
+
+  inputLabel : {
+    fontWeight: 'bold',           // Bold for the label
+    width: '500px',               // Fixed width for the label (adjust as necessary)
+    whiteSpace: 'nowrap',         // Ensure label text doesn’t wrap
+    position: 'relative',
+    top: '-5px',   // Fine-tune this value to move labels slightly upwards
+  },
+
+  saveButtonContainer: {
+    position: 'absolute',
+    bottom: '20px',
+    right: '20px',
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  
+  saveButton: {
+    padding: '10px 20px',
+    backgroundColor: '#007bff',  // Blue color
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '16px',
+    '&:hover': {
+      backgroundColor: '#0056b3',  // Darker blue on hover
+    },
   },
 };

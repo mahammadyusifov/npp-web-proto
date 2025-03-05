@@ -4,14 +4,13 @@ import Logo from "@/assets/logo.svg";
 import LogoutImage from "@/assets/logout.svg";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TABS } from "@/constants/TABS";
 import { useQuery } from "@tanstack/react-query";
 import { useGetProductInfo } from "@/apis/contents/useGetContent";
 import { ROUTER } from "@/constants/ROUTER";
 import { getCookie } from "@/utils/cookies";
 import { API_URL } from "@/constants/API_URL";
-import React from "react";
 
 export default function Index() {
   const router = useRouter();
@@ -113,9 +112,6 @@ export default function Index() {
   
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-
-      e.target.value = "";
-      
       setFileName(file.name); // Store file name
       setSelectedFile(file);  // Store file for later processing
     }
@@ -138,16 +134,9 @@ export default function Index() {
       }
     }
 
-    data['n.chains'] = {}
-    data['n.chains']['n.chains.value'] = inputValues.nChains
-    console.log("This is n.chains = ")
-    console.log(inputValues.nChains)
-
     const fpInput = document.getElementById("FPInput") as HTMLInputElement;
     const fpInputValue = fpInput.value;
     data["FP"]["FP Input"] = fpInputValue;
-
-    console.log("This is settings:");
 
     try {
       console.log(data)
@@ -163,6 +152,19 @@ export default function Index() {
             "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
         },
       });
+
+      // const response = await axios.get(API_URL.CONTENT.COMMON2,
+      //   {
+      //     timeout: 60 * 4 * 1000,
+      //     headers: {
+      //       "Access-Control-Allow-Origin": "*",
+      //       "Access-Control-Allow-Credentials": "true",
+      //       "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+      //       "Access-Control-Allow-Headers":
+      //         "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
+      //     }
+      //   }
+      // );
 
       const response_data = await response;
       console.log(response_data);
@@ -209,23 +211,21 @@ export default function Index() {
           const data = JSON.parse(content);
   
           // Extract values
-          setDropdownValues((prev) => {
-            const newValues = { ...prev };
-      
-            Object.keys(data).forEach((tabLabel) => {
-              if (newValues[tabLabel]) {
-                Object.keys(data[tabLabel]).forEach((itemLabel) => {
-                  if (newValues[tabLabel][itemLabel] !== undefined) {
-                    newValues[tabLabel][itemLabel] = data[tabLabel][itemLabel];
-                  }
-                });
+          for (let key in data) {
+            for (let key2 in data[key]) {
+              if (data[key][key2] === "High") {
+                allTabValues[key][key2] = "1";
               }
-            });
+              else if (data[key][key2] === "Medium"){
+                allTabValues[key][key2] = "2";
+              }
+              else if (data[key][key2] === "Low"){
+                allTabValues[key][key2] = "3";
+              }
+            }
+          }
       
-            return newValues;
-          });
-      
-          setInputValue(data["FP"]["FP Input"].toString());
+          setInputValue(data.FP.toString());
           
         } catch (error) {
           console.error("Error parsing JSON file:", error);
@@ -236,41 +236,6 @@ export default function Index() {
     reader.readAsText(selectedFile); // Read file as text
   };
   
-  const handleSaveToFile = () => {
-    // Step 1: Merge the FP input value into dropdownValues
-    const dataToSave = {
-      ...dropdownValues,
-      FP: {
-        ...dropdownValues.FP,
-        "FP Input": inputValue, // Include the FP input value
-      },
-    };
-  
-    // Step 2: Convert the merged object to a JSON string
-    const jsonString = JSON.stringify(dataToSave, null, 2); // Pretty-print with 2 spaces
-  
-    // Step 3: Create a Blob from the JSON string
-    const blob = new Blob([jsonString], { type: "application/json" });
-  
-    // Step 4: Create a URL for the Blob
-    const url = URL.createObjectURL(blob);
-  
-    // Step 5: Determine the file name
-    const downloadedFileName = fileName
-      ? fileName.replace(/\.[^/.]+$/, ".json") // Replace the extension with .json
-      : "TabValues.json"; // Default name if no file is uploaded
-  
-    // Step 6: Create a temporary <a> element to trigger the download
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = downloadedFileName; // Use the dynamic file name
-    document.body.appendChild(a); // Append the <a> element to the DOM
-    a.click(); // Programmatically click the <a> element to trigger the download
-  
-    // Step 7: Clean up
-    document.body.removeChild(a); // Remove the <a> element from the DOM
-    URL.revokeObjectURL(url); // Release the Blob URL
-  };
 
 
   return (
@@ -295,23 +260,15 @@ export default function Index() {
                 </button>
                 <button onClick={() => router.push(ROUTER.SST)}>
                   Statistical Methods
-                </button>
+                  </button>
                 <button onClick={() => router.push(ROUTER.RESULT)}>
                   Reliability Views
                 </button>
               </nav>
             </div>
-            <div css={cssObj.rightSection}>
-                <button 
-                    css={cssObj.newButton}
-                    onClick={() => router.push(ROUTER.SETTINGS)}
-                >
-                    Settings
-                </button>
-                <Link href={ROUTER.SIGN_IN}>
-                    <LogoutImage />
-                </Link>
-              </div>
+            <Link href={ROUTER.SIGN_IN}>
+              <LogoutImage />
+            </Link>
           </div>
         </header>
 
@@ -339,7 +296,6 @@ export default function Index() {
 
             <button onClick={() => fileUploadRef.current?.click()}>Browse</button>
             <button onClick = {onUpload}>Upload</button>
-            <button onClick={handleSaveToFile}>Save</button>
           </div>
         </section>
 
@@ -380,7 +336,7 @@ export default function Index() {
                               display: tab.label === activeContent ? "block" : "none",
                             }}
                           >
-                            <label>FP value </label>
+                            <label>{tab.label}</label>
                             <input
                               id="FPInput"
                               type="text"
@@ -399,24 +355,19 @@ export default function Index() {
                             >
                               <label>{item.label}</label>
                               <select
-                                    name={item.label}
-                                    value={dropdownValues[tab.label]?.[item.label] || ""}
-                                    onChange={(e) =>
-                                      setDropdownValues((prev) => ({
-                                        ...prev,
-                                        [tab.label]: {
-                                          ...prev[tab.label],
-                                          [item.label]: e.target.value,
-                                        },
-                                      }))
-                                    }
+                                name={item.label}
+                                value={allTabValues[tab.label][item.label]}
+                                onChange={onChangeTabValue}
+                              >
+                                {item.values.map((option) => (
+                                  <option
+                                    value={option}
+                                    key={`tab-${tab.label}-items-${item.label}-${option}`}
                                   >
-                                    {item.values.map((option) => (
-                                      <option key={option} value={option}>
-                                        {option}
-                                      </option>
-                                    ))}
-                          </select>
+                                    {option}
+                                  </option>
+                                ))}
+                              </select>
                             </li>
                           ))
                         )

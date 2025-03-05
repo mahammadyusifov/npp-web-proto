@@ -61,6 +61,8 @@ function(req) {
     "PFD"
   )
 
+  n.chains <- as.numeric(parsed_data$`n.chains`)
+
   FP <- as.numeric(parsed_data$`FP`$`FP Input`)
   data$SR_FP <- FP
   data$SD_FP <- FP
@@ -207,29 +209,31 @@ function(req) {
 
   # return(list("success"))
 
-  model.sim <- bugs(data, inits=NULL, parameters, model.file,
-                    n.chains=1, n.iter=20000, n.burnin=500, debug=FALSE, DIC=FALSE, n.thin=1,
-                    bugs.directory="C:/WinBUGS14",
-                    working.directory="C:/WinBUGS14/bbn_Routput")
+  model.sim <- bugs(data,
+    inits = NULL, parameters, model.file,
+    n.chains, n.iter = 20000, n.burnin = 500, debug = FALSE, DIC = FALSE, n.thin = 1,
+    bugs.directory = "C:/WinBUGS14",
+    working.directory = "C:/WinBUGS14/bbn_Routput"
+  )
 
   defect_introduced <- model.sim[["sims.list"]][["IC_Defect_introduced_in_current"]]
 
-  df.defect_introduced <- data.frame(value=defect_introduced, defect.type="introduced")
+  df.defect_introduced <- data.frame(value = defect_introduced, defect.type = "introduced")
   df.defect_introduced$iteration <- 1:nrow(df.defect_introduced)
 
   defect_remained <- model.sim[["sims.list"]][["IC_Total_Remained_Defect"]]
 
-  df.defect_remained <- data.frame(value=defect_remained, defect.type="remained")
+  df.defect_remained <- data.frame(value = defect_remained, defect.type = "remained")
   df.defect_remained$iteration <- 1:nrow(df.defect_remained)
 
   generic_fsd <- model.sim[["sims.list"]][["generic_FSD"]]
 
-  df.generic_fsd <- data.frame(value=generic_fsd, defect.type="generic_FSD")
+  df.generic_fsd <- data.frame(value = generic_fsd, defect.type = "generic_FSD")
   df.generic_fsd$iteration <- 1:nrow(df.generic_fsd)
 
   pfd <- model.sim[["sims.list"]][["PFD"]]
 
-  df.pfd <- data.frame(value=pfd, defect.type="PFD")
+  df.pfd <- data.frame(value = pfd, defect.type = "PFD")
   df.pfd$iteration <- 1:nrow(df.pfd)
 
 

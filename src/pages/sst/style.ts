@@ -169,4 +169,16 @@ export const cssObj = {
   sstTitleSection: css`
     margin-top: 30px;
   `,
+  rightSection: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5mm', // This creates the 10mm spacing between LogoutImage and the new button
+  },
+  
+  newButton: {
+    // Add your button styling here
+    padding: '8px 16px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
 };
