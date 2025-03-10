@@ -61,6 +61,7 @@ function(req) {
     "PFD"
   )
 
+
   FP <- as.numeric(parsed_data$`FP`$`FP Input`)
   data$SR_FP <- FP
   data$SD_FP <- FP
@@ -206,11 +207,21 @@ function(req) {
   # print(data$SR_CD_state)
 
   # return(list("success"))
-
+  nChains <- as.numeric(parsed_data$`settings`$`nChains`)
+  nIter  <- as.numeric(parsed_data$`settings`$`nIter`)
+  nBurnin  <- as.numeric(parsed_data$`settings`$`nBurnin`)
+  nThin  <- as.numeric(parsed_data$`settings`$`nThin`)
+  autoCloseWinBugs  <- as.logical(parsed_data$`settings`$`autoCloseWinBugs`)
+  computeDIC  <- as.logical(parsed_data$`settings`$`computeDIC`)
+  winBugsExecutableDir  <- parsed_data$`settings`$`winBugsExecutableDir`
+  workingDir  <- parsed_data$`settings`$`workingDir`
+  
+  print("This is parsed_data[settings] : ")
+  print(parsed_data$`settings`)
   model.sim <- bugs(data, inits=NULL, parameters, model.file,
-                    n.chains=1, n.iter=20000, n.burnin=500, debug=FALSE, DIC=FALSE, n.thin=1,
-                    bugs.directory="C:/WinBUGS14",
-                    working.directory="C:/WinBUGS14/bbn_Routput")
+                    n.chains=nChains, n.iter=nIter, n.burnin=nBurnin, debug=autoCloseWinBugs, DIC=computeDIC, n.thin=nThin,
+                    bugs.directory= winBugsExecutableDir,
+                    working.directory=workingDir)
 
   defect_introduced <- model.sim[["sims.list"]][["IC_Defect_introduced_in_current"]]
 

@@ -28,11 +28,7 @@ def winbugs(request: dict):
 
     data = json.loads(request["data"])
 
-    print(data)
-
     res = requests.post("http://127.0.0.1:8888/content/common", json=data)
     response = json.loads(res.text)
-
-    print(response)
 
     return response

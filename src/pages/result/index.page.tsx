@@ -1,8 +1,7 @@
 import { cssObj } from "./style";
 import { useRouter } from "next/router";
 import Link from "next/link";
-
-import LogoImage from "@/assets/logo.svg";
+import Logo from "@/assets/logo.svg";
 import LogoutImage from "@/assets/logout.svg";
 
 import { Chart } from "react-google-charts";
@@ -10,28 +9,34 @@ import { ROUTER } from "@/constants/ROUTER";
 
 import { DUMMY_RESULT } from "@/constants/DUMMY_RESULT";
 
+import { useResultContext } from "@/contexts/ResultContext";
 
 export default function Result() {
   const router = useRouter();
-  const result = router.query.data ? JSON.parse(router.query.data as string) : null;
-  console.log(result);
+  
+  const {resultData, setResultData} = useResultContext();
+
+  if (!resultData || !resultData.data || resultData.data.length < 4) {
+  console.error("Data is missing or incorrectly structured");
+  return null; // Handle the case when data is missing or malformed
+  }
 
   // dummy data
-  const resultData: {
+  const resultData0: {
     value: number;
     "defect.type": string;
     iteration: number;
-  }[] = result.data[0];
+  }[] = resultData.data[0];
 
   let defect_introduced: [string, number][] = [];
   let defect_remained: [string, number][] = [];
   let generic_fsd: [string, number][] = [];
   let pfd: [string, number][] = [];
 
-  const mean_remained: number = result.data[2][0];
-  const mean_pfd: number = result.data[3][0];
+  const mean_remained: number = resultData.data[2][0];
+  const mean_pfd: number = resultData.data[3][0];
 
-  resultData.forEach(item => {
+  resultData0.forEach(item => {
     const iteration = String(item.iteration);
     const value = item.value;
 
@@ -44,13 +49,13 @@ export default function Result() {
     }
   });
 
-  const resultData2: {
+  const resultData1: {
     value: number;
     "defect.type": string;
     iteration: number;
-  }[] = result.data[1];
+  }[] = resultData.data[1];
 
-  resultData2.forEach(item => {
+  resultData1.forEach(item => {
     const iteration = String(item.iteration);
     const value = item.value;
 
@@ -65,35 +70,44 @@ export default function Result() {
 
   return (
     <>
-      <header css={cssObj.header}>
-        <div css={cssObj.container}>
-          <div>
-            <Link href={ROUTER.HOME}>
-              <LogoImage />
-            </Link>
-            <nav>
-              <button onClick={() => router.push(ROUTER.HOME)}>
-                Bayesian Methods
-              </button>
-              <button onClick={() => router.push(ROUTER.SST)}>
-                  Statistical Methods
-              </button>
-              <button
-                css={cssObj.active}
-                onClick={() => router.push(ROUTER.RESULT)}
-              >
-                Reliability Views
-              </button>
-            </nav>
-          </div>
-          <Link href={ROUTER.SIGN_IN}>
-            <LogoutImage />
-          </Link>
-        </div>
-      </header>
+        <header css={cssObj.header}>
+            <div css={cssObj.container}>
+                <div>
+                  <Link href={ROUTER.HOME}>
+                    <Logo />
+                  </Link>
+                  <nav>
+                    <button
+                      css={cssObj.active}
+                      onClick={() => router.push(ROUTER.HOME)}
+                    >
+                      Bayesian Methods
+                    </button>
+                    <button onClick={() => router.push(ROUTER.SST)}>
+                      Statistical Methods
+                    </button>
+                    <button onClick={() => router.push(ROUTER.RESULT)}>
+                      Reliability Views
+                    </button>
+                  </nav>
+                </div>
+                <div css={cssObj.rightSection}>
+                    <button 
+                        css={cssObj.newButton}
+                        onClick={() => router.push(ROUTER.SETTINGS)}
+                    >
+                        Settings
+                    </button>
+                    <Link href={ROUTER.SIGN_IN}>
+                        <LogoutImage />
+                    </Link>
+                </div>
+            </div>
+        </header>
 
       <section css={cssObj.container}>
         <h1 css={cssObj.title}>Plots</h1>
+        <button >Upload</button>
       </section>
 
       <section css={[cssObj.container, cssObj.chart]}>

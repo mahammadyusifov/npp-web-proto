@@ -10,6 +10,7 @@ import { useGetProductInfo } from "@/apis/contents/useGetContent";
 import { ROUTER } from "@/constants/ROUTER";
 import { getCookie } from "@/utils/cookies";
 import { API_URL } from "@/constants/API_URL";
+import LogoutImage from "@/assets/logout.svg";
 import { title } from "process";
 import { isNoSubstitutionTemplateLiteral } from "typescript";
 
@@ -185,13 +186,8 @@ export default function Index() {
 
   return (
     <>
-      {/* {isLoading && (
-        <div style={loadingLayerStyle}>
-          <p>Loading...</p>
-        </div>
-      )} */}
         <header css={cssObj.header}>
-          <div css={cssObj.container}>
+        <div css={cssObj.container}>
             <div>
               <Link href={ROUTER.HOME}>
                 <Logo />
@@ -205,14 +201,25 @@ export default function Index() {
                 </button>
                 <button onClick={() => router.push(ROUTER.SST)}>
                   Statistical Methods
-                  </button>
+                </button>
                 <button onClick={() => router.push(ROUTER.RESULT)}>
                   Reliability Views
                 </button>
               </nav>
             </div>
-          </div>
-        </header>
+            <div css={cssObj.rightSection}>
+                <button 
+                    css={cssObj.newButton}
+                    onClick={() => router.push(ROUTER.SETTINGS)}
+                >
+                    Settings
+                </button>
+                <Link href={ROUTER.SIGN_IN}>
+                    <LogoutImage />
+                </Link>
+            </div>
+        </div>
+    </header>
 
         <section
           id="sst-title-section"

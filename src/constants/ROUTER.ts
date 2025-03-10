@@ -4,4 +4,5 @@ export const ROUTER = {
   HOME: "/",
   RESULT: "/result",
   SST:"/sst",
+  SETTINGS:"/settings"
 };
