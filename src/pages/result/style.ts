@@ -38,11 +38,18 @@ export const cssObj = {
       color: ${COLORS.white};
     }
   `,
+  meantext: {
+    marginTop: '0mm', // Moves "MEAN" down
+    display: 'inline-block', // Ensures margin works properly
+  },
+  chart: {
+    marginTop: '2mm', // Adds 2mm space below "PLOTS"
+  },
 
   container: css`
     width: 1280px;
-    margin: auto;
-    padding: 0 10px;
+    margin: 0 auto;
+    padding: 0 20px;
   `,
   active: css`
     color: ${COLORS.white};
@@ -203,7 +210,7 @@ export const cssObj = {
       margin-right: 16px;
     }
   `,
-  settingsTitleSection: css`
+  bayesianTitleSection: css`
     margin-top: 30px;
   `,
   rightSection: {
