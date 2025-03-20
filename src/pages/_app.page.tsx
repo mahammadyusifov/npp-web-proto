@@ -8,6 +8,7 @@ import Head from "next/head";
 import "@/styles/globals.css";
 import { SettingsContextProvider } from "@/contexts/settingsContext";
 import { ResultContextProvider } from "@/contexts/ResultContext";
+import { DropdownValuesContextProvider } from "@/contexts/DropdownValuesContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,6 +23,7 @@ const queryClient = new QueryClient({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
+      <DropdownValuesContextProvider>
       <ResultContextProvider>
       <SettingsContextProvider>
         <Head>
@@ -32,6 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
         </Hydrate>
       </SettingsContextProvider>  
       </ResultContextProvider>
+      </DropdownValuesContextProvider>
     </QueryClientProvider>
   );
 }

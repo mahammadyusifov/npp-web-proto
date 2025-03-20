@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Logo from "@/assets/logo.svg";
 import LogoutImage from "@/assets/logout.svg";
+import { useDropdownValuesContext } from "@/contexts/DropdownValuesContext";
 
 import { ROUTER } from "@/constants/ROUTER";
 import { useResultContext } from "@/contexts/ResultContext";
@@ -12,6 +13,7 @@ import { Chart } from "react-google-charts";
 export default function Result() {
   const router = useRouter();
   const { resultData } = useResultContext();
+  const { DropdownValues, setDropdownValues} = useDropdownValuesContext();
   const fileUploadRef = useRef<HTMLInputElement>(null);
 
   const [fileName, setFileName] = useState<string>();
@@ -33,6 +35,36 @@ export default function Result() {
       setFileName(file.name);
       setSelectedFile(file);
     }
+  };
+
+  const handleSaveToFile = () => {
+    const dataToSave = {
+      ...DropdownValues}
+  
+    // Step 2: Convert the merged object to a JSON string
+    const jsonString = JSON.stringify(dataToSave, null, 2); // Pretty-print with 2 spaces
+  
+    // Step 3: Create a Blob from the JSON string
+    const blob = new Blob([jsonString], { type: "application/json" });
+  
+    // Step 4: Create a URL for the Blob
+    const url = URL.createObjectURL(blob);
+  
+    // Step 5: Determine the file name
+    const downloadedFileName = fileName
+      ? fileName.replace(/\.[^/.]+$/, ".json") // Replace the extension with .json
+      : "TabValues.json"; // Default name if no file is uploaded
+  
+    // Step 6: Create a temporary <a> element to trigger the download
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = downloadedFileName; // Use the dynamic file name
+    document.body.appendChild(a); // Append the <a> element to the DOM
+    a.click(); // Programmatically click the <a> element to trigger the download
+  
+    // Step 7: Clean up
+    document.body.removeChild(a); // Remove the <a> element from the DOM
+    URL.revokeObjectURL(url); // Release the Blob URL
   };
 
   // UseEffect to update the state when resultData changes
@@ -128,7 +160,7 @@ export default function Result() {
 
           <button onClick={() => fileUploadRef.current?.click()}>Browse</button>
           <button>Upload</button>
-          <button>Save</button>
+          <button onClick={handleSaveToFile}>Save</button>
         </div>
       </section>
 
