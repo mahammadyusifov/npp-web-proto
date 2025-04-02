@@ -12,7 +12,7 @@ import { Chart } from "react-google-charts";
 
 export default function Result() {
   const router = useRouter();
-  const { resultData } = useResultContext();
+  const { resultData, pfd, defectRemained, setPfd, setDefectRemained } = useResultContext();
   const { DropdownValues, setDropdownValues} = useDropdownValuesContext();
   const fileUploadRef = useRef<HTMLInputElement>(null);
 
@@ -20,9 +20,7 @@ export default function Result() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const [defectIntroduced, setDefectIntroduced] = useState<[string, number][]>([]);
-  const [defectRemained, setDefectRemained] = useState<[string, number][]>([]);
   const [genericFSD, setGenericFSD] = useState<[string, number][]>([]);
-  const [pfd, setPfd] = useState<[string, number][]>([]);
 
   const [meanRemained, setMeanRemained] = useState<number | null>(null);
   const [meanPfd, setMeanPfd] = useState<number | null>(null);
@@ -39,7 +37,13 @@ export default function Result() {
 
   const handleSaveToFile = () => {
     const dataToSave = {
-      ...DropdownValues}
+    'input':
+      {...DropdownValues},
+    'output':{
+      'defectRemained' : defectRemained,
+      'pfd' : pfd
+    }
+  }
   
     // Step 2: Convert the merged object to a JSON string
     const jsonString = JSON.stringify(dataToSave, null, 2); // Pretty-print with 2 spaces
@@ -53,7 +57,7 @@ export default function Result() {
     // Step 5: Determine the file name
     const downloadedFileName = fileName
       ? fileName.replace(/\.[^/.]+$/, ".json") // Replace the extension with .json
-      : "TabValues.json"; // Default name if no file is uploaded
+      : "InputOutput.json"; // Default name if no file is uploaded
   
     // Step 6: Create a temporary <a> element to trigger the download
     const a = document.createElement("a");
@@ -65,6 +69,53 @@ export default function Result() {
     // Step 7: Clean up
     document.body.removeChild(a); // Remove the <a> element from the DOM
     URL.revokeObjectURL(url); // Release the Blob URL
+  };
+
+  const handleUpload = () => {
+    if (!selectedFile) {
+      console.log("No file selected");
+      return;
+    }
+  
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target?.result) {
+        try {
+          const content = event.target.result as string; // Get file content
+          console.log("File content:", content);
+  
+          // Parse JSON
+          const data = JSON.parse(content);
+          const input = data['input']
+  
+          // Extract values
+          setDropdownValues((prev) => {
+            const newValues = { ...prev };
+      
+            Object.keys(input).forEach((tabLabel) => {
+              if (newValues[tabLabel]) {
+                Object.keys(input[tabLabel]).forEach((itemLabel) => {
+                  if (newValues[tabLabel][itemLabel] !== undefined) {
+                    newValues[tabLabel][itemLabel] = input[tabLabel][itemLabel];
+                  }
+                });
+              }
+            });
+      
+            return newValues;
+          });
+
+          setDefectRemained(data['output']['defectRemained']);
+          setPfd(data['output']['pfd']);
+
+          
+        } catch (error) {
+          console.error("Error parsing JSON file:", error);
+        }
+      }
+    };
+  
+    reader.readAsText(selectedFile); // Read file as text
   };
 
   // UseEffect to update the state when resultData changes
@@ -159,7 +210,7 @@ export default function Result() {
           </div>
 
           <button onClick={() => fileUploadRef.current?.click()}>Browse</button>
-          <button>Upload</button>
+          <button onClick={handleUpload}>Upload</button>
           <button onClick={handleSaveToFile}>Save</button>
         </div>
       </section>
@@ -177,8 +228,8 @@ export default function Result() {
         </div>
 
         <div className="chart-container">
-          {defectRemained.length > 0 ? (
-            <Chart
+        {defectRemained && defectRemained.length > 0 ? (
+          <Chart
             chartType="AreaChart"
             data={[["Iterations", "Values"], ...defectRemained]}
             options={{
@@ -191,15 +242,15 @@ export default function Result() {
               vAxis: { textStyle: { color: "#9AA1A9" } },
             }}
           />
-          ) : (
-            <div className="chart-placeholder">
-              <svg width="400" height="200">
-                <line x1="0" y1="50" x2="400" y2="50" stroke="lightgray" strokeWidth="2" />
-                <line x1="0" y1="150" x2="400" y2="150" stroke="lightgray" strokeWidth="2" />
-              </svg>
-            </div>
-          )}
-        </div>
+       ) : (
+    <div className="chart-placeholder">
+      <svg width="400" height="200">
+        <line x1="0" y1="50" x2="400" y2="50" stroke="lightgray" strokeWidth="2" />
+        <line x1="0" y1="150" x2="400" y2="150" stroke="lightgray" strokeWidth="2" />
+      </svg>
+    </div>
+  )}
+</div>
       </section>
 
       {/* Chart 2 */}
@@ -210,20 +261,20 @@ export default function Result() {
         </div>
 
         <div className="chart-container">
-          {pfd.length > 0 ? (
+          {pfd && pfd.length > 0 ? (
             <Chart
-            chartType="AreaChart"
-            data={[["Iterations", "Values"], ...pfd]}
-            options={{
-              title: "PFD",
-              titleTextStyle: { color: "#111827", fontSize: 12 },
-              colors: ["#2563EB"],
-              areaOpacity: 0.05,
-              chartArea: { width: 1090, left: 30, top: 20 },
-              hAxis: { textStyle: { color: "#9AA1A9" } },
-              vAxis: { textStyle: { color: "#9AA1A9" } },
-            }}
-          />
+              chartType="AreaChart"
+              data={[["Iterations", "Values"], ...pfd]}
+              options={{
+                title: "PFD",
+                titleTextStyle: { color: "#111827", fontSize: 12 },
+                colors: ["#2563EB"],
+                areaOpacity: 0.05,
+                chartArea: { width: 1090, left: 30, top: 20 },
+                hAxis: { textStyle: { color: "#9AA1A9" } },
+                vAxis: { textStyle: { color: "#9AA1A9" } },
+              }}
+            />
           ) : (
             <div className="chart-placeholder">
               <svg width="400" height="200">
@@ -233,7 +284,10 @@ export default function Result() {
             </div>
           )}
         </div>
+
       </section>
     </>
   );
 }
+
+

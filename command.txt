@@ -1,5 +1,9 @@
 .venv/Scripts/activate
+npm run dev
 
+.venv/Scripts/activate
+cd server
 uvicorn main:app --reload --host=127.0.0.1 --port=8000
 
+.venv/Scripts/activate
 Rscript plumber/app.R
