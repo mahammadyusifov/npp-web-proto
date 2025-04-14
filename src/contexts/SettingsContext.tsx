@@ -9,7 +9,8 @@ export const SettingsContextProvider = ({ children }) => {
     const [autoCloseWinBugs, setautoCloseWinBugs] = useState(false);
     const [computeDIC, setcomputeDIC] = useState(false);
     const [nThin, setnThin] = useState(1);
-    const [winBugsExecutableDir, setwinBugsExecutableDir] = useState("C:/WinBUGS14");
+    // const [winBugsExecutableDir, setwinBugsExecutableDir] = useState("C:/WinBUGS14");
+    const [winBugsExecutableDir, setwinBugsExecutableDir] = useState("C:/Program Files (x86)/OpenBUGS/OpenBUGS323");
     const [workingDir, setworkingDir] = useState("C:/WinBUGS14/bbn_Routput");
 
 

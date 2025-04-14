@@ -1,7 +1,8 @@
 # api.R
 library("plumber")
 library("jsonlite")
-library("R2WinBUGS")
+# library("R2WinBUGS")
+library("R2OpenBUGS")
 
 #* Estimate using WinBUGS
 #* @post /content/common
@@ -220,7 +221,8 @@ function(req) {
   print(parsed_data$`settings`)
   model.sim <- bugs(data, inits=NULL, parameters, model.file,
                     n.chains=nChains, n.iter=nIter, n.burnin=nBurnin, debug=autoCloseWinBugs, DIC=computeDIC, n.thin=nThin,
-                    bugs.directory= winBugsExecutableDir,
+                    OpenBUGS.pgm = "C:/Program Files (x86)/OpenBUGS/OpenBUGS323/OpenBUGS.exe",
+                    useWINE = FALSE,
                     working.directory=workingDir)
 
   defect_introduced <- model.sim[["sims.list"]][["IC_Defect_introduced_in_current"]]
