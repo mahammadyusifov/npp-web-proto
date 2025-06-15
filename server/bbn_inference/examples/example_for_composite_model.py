@@ -1,10 +1,10 @@
 import arviz as az
 import os
 
-from server.bbn_inference.bbn_utils import run_sampling
-from server.bbn_inference.data import nrc_report_data
-from server.bbn_inference.composite_model import *
-from server.bbn_inference.generic_model import create_generic_model
+from bbn_inference.bbn_utils import run_sampling
+from bbn_inference.data import nrc_report_data
+from bbn_inference.composite_model import *
+from bbn_inference.generic_model import create_generic_model
 import pymc as pm
 
 import pytensor

@@ -1,6 +1,6 @@
-from server.bbn_inference.sensitivity_analysis import *
-from server.bbn_inference.examples.example_for_composite_model import run_example_for_composite_model
-from server.bbn_inference.bbn_utils import run_sampling
+from bbn_inference.sensitivity_analysis import *
+from bbn_inference.examples.example_for_composite_model import run_example_for_composite_model
+from bbn_inference.bbn_utils import run_sampling
 import json
 import os
 

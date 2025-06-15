@@ -284,20 +284,20 @@ export default function Index() {
                         <h1>Result</h1>
                         {B1 !== null && B2 !== null && (
                             <div>
-                            <p>PFD에 대한 사후 분포: <b>B({B1},{B2})</b></p>
+                            <p>Posterior distribution of the PFD: <b>B({B1},{B2})</b></p>
                             </div>
                         )}
                         
                         {z !== null && (
                             <div>
-                            <p>대상 시스템 신뢰도: <b>{z}/{q} = {R3}</b></p>
+                            <p>Reliability of the target system: <b>{z}/{q} = {R3}</b></p>
                             </div>
                         )}
                       <div>
                         <br/>
                         <br/>
-                        <p>사전 확률 밀도 함수(균등 분포)에 대한 파라미터 a=b=1 와 함께 베이지안 접근법을 사용하고 n번 시험에서 실패의 개수가 x개라고 할 때, PFD에 대한 사후 분포는 <i><b>B(x+a,n-x+b)</b></i></p>
-                        <p>평균 실패 확률(대상 시스템의 신뢰도)은 사후 분포의 확률로 <i><b>(a+x)/(a+b+n)</b></i>으로 계산됨</p>
+                        <p>Using the Bayesian approach with a prior probability density function (uniform distribution) and parameters a = b = 1, if there are x failures in n trials, the posterior distribution for the PFD is:<i><b>B(x+a,n-x+b)</b></i></p>
+                        <p>The mean failure probability (i.e., the reliability of the target system) is given by the expected value of the posterior distribution.<i><b>(a+x)/(a+b+n)</b></i> </p>
                       </div>
 
                     </div>

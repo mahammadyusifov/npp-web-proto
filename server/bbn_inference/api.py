@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from server.bbn_inference.examples.example_for_sensitivity_analysis import run_full_analysis
+from bbn_inference.examples.example_for_sensitivity_analysis import run_full_analysis
 
 router = APIRouter()
 
