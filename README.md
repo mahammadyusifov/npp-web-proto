@@ -1,3 +1,21 @@
+# Glossary
+This Readme file consists of
+* User guide
+*  Developer Guide
+
+Depending on if you want to modify the code or just use the existing code, refer to developer or user guide respectively.
+
+# User guide
+Visit --- for the online web app.
+
+The app consists of 4 pages - Bayesian Methods, Statistical Methods, Reliability Views, Settings, and default homepage is Bayesian Methods.
+
+## Bayesian Methods page
+You can either set the input state on the page, or (browse+upload) a JSON file to set the parameters. The template of JSON file can be downloaded by 'Save' button.
+
+## Settings
+Default hyperparameters concerning number of iterations, count of burns and whether to compute DIC, pD and deviance and similar are set here.
+
 # Development Environment Setup Document
 
 This document provides a guide for installing and setting up Next.js, FastAPI, PlumberAPI, and MySQL in a local development environment.
