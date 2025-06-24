@@ -20,6 +20,7 @@ export default function Result() {
   const [fileName, setFileName] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
+  // The states for the mean values are now updated by the new logic in handleUpload
   const [meanRemained, setMeanRemained] = useState<number | null>(null);
   const [meanPfd, setMeanPfd] = useState<number | null>(null);
 
@@ -54,6 +55,7 @@ export default function Result() {
     URL.revokeObjectURL(url);
   };
 
+  // UPDATED LOGIC IS INSIDE THIS FUNCTION
   const handleUpload = () => {
     if (!selectedFile) {
       alert("Please select a file to upload.");
@@ -65,8 +67,9 @@ export default function Result() {
         try {
           const content = event.target.result as string;
           const data = JSON.parse(content);
-          const input = data['input'];
 
+          // Existing logic to update dropdowns
+          const input = data['input'];
           setDropdownValues((prev) => {
             const newValues = { ...prev };
             Object.keys(input).forEach((tabLabel) => {
@@ -80,8 +83,33 @@ export default function Result() {
             });
             return newValues;
           });
-          setDefectRemained(data['output']['defectRemained']);
-          setPfd(data['output']['pfd']);
+          
+          const output = data['output'];
+
+          // --- NEW LOGIC START ---
+          // Calculate and set the mean for 'defectRemained'
+          if (output.defectRemained && Array.isArray(output.defectRemained) && output.defectRemained.length > 0) {
+            const remainedValues = output.defectRemained.map((item: [string, number]) => item[1]);
+            const sumRemained = remainedValues.reduce((acc: number, val: number) => acc + val, 0);
+            setMeanRemained(sumRemained / remainedValues.length);
+          } else {
+            setMeanRemained(null);
+          }
+
+          // Calculate and set the mean for 'pfd'
+          if (output.pfd && Array.isArray(output.pfd) && output.pfd.length > 0) {
+            const pfdValues = output.pfd.map((item: [string, number]) => item[1]);
+            const sumPfd = pfdValues.reduce((acc: number, val: number) => acc + val, 0);
+            setMeanPfd(sumPfd / pfdValues.length);
+          } else {
+            setMeanPfd(null);
+          }
+          // --- NEW LOGIC END ---
+
+          // Existing logic to update chart data
+          setDefectRemained(output.defectRemained);
+          setPfd(output.pfd);
+
         } catch (error) {
           console.error("Error parsing JSON file:", error);
           alert("Failed to parse JSON file. Please check the file format.");
