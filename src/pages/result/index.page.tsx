@@ -168,67 +168,69 @@ export default function Result() {
             </div>
         </section>
 
-        {/* Grid for plot boxes */}
-        <div css={cssObj.resultsGrid}>
-          {/* First Plot Box */}
-          <div css={cssObj.resultBox}>
-            <h2>IC_Total_Remained_Defect</h2>
-            <div css={cssObj.metricDisplay}>
-              <span>MEAN:</span>
-              <span css={cssObj.metricValue}>{meanRemained?.toFixed(4) ?? "N/A"}</span>
+        {/* Grid for plot boxes wrapped in a container */}
+        <div css={cssObj.container}>
+          <div css={cssObj.resultsGrid}>
+            {/* First Plot Box */}
+            <div css={cssObj.resultBox}>
+              <h2>IC_Total_Remained_Defect</h2>
+              <div css={cssObj.metricDisplay}>
+                <span>MEAN:</span>
+                <span css={cssObj.metricValue}>{meanRemained?.toFixed(4) ?? "N/A"}</span>
+              </div>
+              <div css={cssObj.chartContainer}>
+                {defectRemained && defectRemained.length > 1 ? (
+                  <Chart
+                    chartType="AreaChart"
+                    width="2000px"
+                    height="300px"
+                    data={[["Iterations", "Values"], ...defectRemained]}
+                    options={{
+                      titleTextStyle: { color: "#111827", fontSize: 16, bold: false },
+                      colors: ["#2563EB"],
+                      backgroundColor: 'transparent',
+                      areaOpacity: 0.1,
+                      chartArea: { width: "98%", height: "80%" },
+                      hAxis: { textStyle: { color: "#9AA1A9" } },
+                      vAxis: { textStyle: { color: "#9AA1A9" } },
+                      legend: 'none',
+                    }}
+                  />
+                ) : (
+                  <div css={cssObj.chartPlaceholder}>No data to display</div>
+                )}
+              </div>
             </div>
-            <div css={cssObj.chartContainer}>
-              {defectRemained && defectRemained.length > 1 ? (
-                <Chart
-                  chartType="AreaChart"
-                  width="100%"
-                  height="300px"
-                  data={[["Iterations", "Values"], ...defectRemained]}
-                  options={{
-                    titleTextStyle: { color: "#111827", fontSize: 16, bold: false },
-                    colors: ["#2563EB"],
-                    backgroundColor: 'transparent',
-                    areaOpacity: 0.1,
-                    chartArea: { width: "90%", height: "80%" },
-                    hAxis: { textStyle: { color: "#9AA1A9" } },
-                    vAxis: { textStyle: { color: "#9AA1A9" } },
-                    legend: 'none',
-                  }}
-                />
-              ) : (
-                <div css={cssObj.chartPlaceholder}>No data to display</div>
-              )}
-            </div>
-          </div>
 
-          {/* Second Plot Box */}
-          <div css={cssObj.resultBox}>
-            <h2>PFD (Probability of Failure on Demand)</h2>
-            <div css={cssObj.metricDisplay}>
-              <span>MEAN:</span>
-              <span css={cssObj.metricValue}>{meanPfd?.toFixed(4) ?? "N/A"}</span>
-            </div>
-            <div css={cssObj.chartContainer}>
-              {pfd && pfd.length > 1 ? (
-                <Chart
-                  chartType="AreaChart"
-                  width="100%"
-                  height="300px"
-                  data={[["Iterations", "Values"], ...pfd]}
-                  options={{
-                    titleTextStyle: { color: "#111827", fontSize: 16, bold: false },
-                    colors: ["#2563EB"],
-                    backgroundColor: 'transparent',
-                    areaOpacity: 0.1,
-                    chartArea: { width: "90%", height: "80%" },
-                    hAxis: { textStyle: { color: "#9AA1A9" } },
-                    vAxis: { textStyle: { color: "#9AA1A9" } },
-                    legend: 'none',
-                  }}
-                />
-              ) : (
-                <div css={cssObj.chartPlaceholder}>No data to display</div>
-              )}
+            {/* Second Plot Box */}
+            <div css={cssObj.resultBox}>
+              <h2>PFD (Probability of Failure on Demand)</h2>
+              <div css={cssObj.metricDisplay}>
+                <span>MEAN:</span>
+                <span css={cssObj.metricValue}>{meanPfd?.toFixed(4) ?? "N/A"}</span>
+              </div>
+              <div css={cssObj.chartContainer}>
+                {pfd && pfd.length > 1 ? (
+                  <Chart
+                    chartType="AreaChart"
+                    width="2000px"
+                    height="300px"
+                    data={[["Iterations", "Values"], ...pfd]}
+                    options={{
+                      titleTextStyle: { color: "#111827", fontSize: 16, bold: false },
+                      colors: ["#2563EB"],
+                      backgroundColor: 'transparent',
+                      areaOpacity: 0.1,
+                      chartArea: { width: "98%", height: "80%" },
+                      hAxis: { textStyle: { color: "#9AA1A9" } },
+                      vAxis: { textStyle: { color: "#9AA1A9" } },
+                      legend: 'none',
+                    }}
+                  />
+                ) : (
+                  <div css={cssObj.chartPlaceholder}>No data to display</div>
+                )}
+              </div>
             </div>
           </div>
         </div>

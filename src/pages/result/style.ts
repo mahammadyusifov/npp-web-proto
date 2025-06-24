@@ -56,7 +56,6 @@ export const cssObj = {
   `,
   titleSection: css`
     margin-top: 40px;
-    /* margin-bottom is handled by the upload section's margin */
   `,
   title: css`
     font-size: ${FONT_SIZE["3xl"]};
@@ -132,11 +131,9 @@ export const cssObj = {
   // Grid and Box styles for the Plots
   resultsGrid: css`
     display: grid;
-    grid-template-columns: repeat(2, 1fr); // Two columns for plots
+    grid-template-columns: 1fr;
     gap: 24px;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 20px;
+    width: 100%;
   `,
   resultBox: css`
     background-color: ${COLORS.white};
@@ -147,6 +144,7 @@ export const cssObj = {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    overflow: hidden; /* THE CRITICAL FIX: Prevents the box from expanding */
     h2 {
       font-size: ${FONT_SIZE.lg};
       font-weight: 600;
@@ -167,8 +165,10 @@ export const cssObj = {
     color: ${COLORS.gray800};
   `,
   chartContainer: css`
-    width: 100%;
-    height: 300px;
+    min-width: 0;
+    overflow-x: auto;
+    background-color: #fdfdfd; 
+    padding-bottom: 10px; 
   `,
   chartPlaceholder: css`
     width: 100%;
