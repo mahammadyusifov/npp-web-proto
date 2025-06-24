@@ -1,0 +1,27 @@
+{
+  "input": {
+    "parameter": {
+      "test_count": 1000,
+      "target": 0.5,
+      "prior": {
+        "distribution": "trace",
+        "mean": 0.0028931410690711595,
+        "confidence": 0.999
+      },
+      "observed_failures": 2
+    }
+  },
+  "output": {
+    "pfd": [
+      [
+        "500",
+        0.003384907982184516
+      ],
+      [
+        "1000",
+        0.0014484048382348447
+      ]
+    ],
+    "confidence": 1.0
+  }
+}

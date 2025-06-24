@@ -55,7 +55,6 @@ export default function Result() {
     URL.revokeObjectURL(url);
   };
 
-  // UPDATED LOGIC IS INSIDE THIS FUNCTION
   const handleUpload = () => {
     if (!selectedFile) {
       alert("Please select a file to upload.");
@@ -70,45 +69,71 @@ export default function Result() {
 
           // Existing logic to update dropdowns
           const input = data['input'];
-          setDropdownValues((prev) => {
-            const newValues = { ...prev };
-            Object.keys(input).forEach((tabLabel) => {
-              if (newValues[tabLabel]) {
-                Object.keys(input[tabLabel]).forEach((itemLabel) => {
-                  if (newValues[tabLabel][itemLabel] !== undefined) {
-                    newValues[tabLabel][itemLabel] = input[tabLabel][itemLabel];
-                  }
-                });
-              }
+          if (input) {
+            setDropdownValues((prev) => {
+              const newValues = { ...prev };
+              Object.keys(input).forEach((tabLabel) => {
+                if (newValues[tabLabel]) {
+                  Object.keys(input[tabLabel]).forEach((itemLabel) => {
+                    if (newValues[tabLabel][itemLabel] !== undefined) {
+                      newValues[tabLabel][itemLabel] = input[tabLabel][itemLabel];
+                    }
+                  });
+                }
+              });
+              return newValues;
             });
-            return newValues;
-          });
+          }
           
           const output = data['output'];
-
-          // --- NEW LOGIC START ---
-          // Calculate and set the mean for 'defectRemained'
-          if (output.defectRemained && Array.isArray(output.defectRemained) && output.defectRemained.length > 0) {
-            const remainedValues = output.defectRemained.map((item: [string, number]) => item[1]);
-            const sumRemained = remainedValues.reduce((acc: number, val: number) => acc + val, 0);
-            setMeanRemained(sumRemained / remainedValues.length);
-          } else {
+          if (!output) {
+            // If there's no output object, reset the data
             setMeanRemained(null);
-          }
-
-          // Calculate and set the mean for 'pfd'
-          if (output.pfd && Array.isArray(output.pfd) && output.pfd.length > 0) {
-            const pfdValues = output.pfd.map((item: [string, number]) => item[1]);
-            const sumPfd = pfdValues.reduce((acc: number, val: number) => acc + val, 0);
-            setMeanPfd(sumPfd / pfdValues.length);
-          } else {
             setMeanPfd(null);
+            setDefectRemained([]);
+            setPfd([]);
+            return;
           }
-          // --- NEW LOGIC END ---
 
-          // Existing logic to update chart data
-          setDefectRemained(output.defectRemained);
-          setPfd(output.pfd);
+          // --- MODIFIED LOGIC FOR MEAN CALCULATION ---
+
+          // Generic function to calculate mean from different data structures
+          const calculateMean = (dataArray: any[] | undefined): number | null => {
+            if (!dataArray || !Array.isArray(dataArray) || dataArray.length === 0) {
+              return null;
+            }
+
+            const firstItem = dataArray[0];
+            let values: number[];
+
+            // Case 1: Array of arrays, e.g., [["500", 0.003]]
+            if (Array.isArray(firstItem)) {
+              values = dataArray.map(item => item[1]);
+            } 
+            // Case 2: Array of objects, e.g., [{ "value": 0.003 }]
+            else if (typeof firstItem === 'object' && firstItem !== null && 'value' in firstItem) {
+              values = dataArray.map(item => item.value);
+            }
+            // Add other cases if needed
+            else {
+              return null;
+            }
+            
+            const numericValues = values.filter((v): v is number => typeof v === 'number' && isFinite(v));
+
+            if (numericValues.length === 0) {
+              return null;
+            }
+
+            const sum = numericValues.reduce((acc, val) => acc + val, 0);
+            return sum / numericValues.length;
+          };
+
+          setMeanRemained(calculateMean(output.defectRemained));
+          setMeanPfd(calculateMean(output.pfd));
+
+          setDefectRemained(output.defectRemained || []);
+          setPfd(output.pfd || []);
 
         } catch (error) {
           console.error("Error parsing JSON file:", error);
