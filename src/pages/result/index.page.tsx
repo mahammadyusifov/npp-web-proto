@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { cssObj } from "./style";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -13,14 +14,11 @@ import { Chart } from "react-google-charts";
 export default function Result() {
   const router = useRouter();
   const { resultData, pfd, defectRemained, setPfd, setDefectRemained } = useResultContext();
-  const { DropdownValues, setDropdownValues} = useDropdownValuesContext();
+  const { DropdownValues, setDropdownValues } = useDropdownValuesContext();
   const fileUploadRef = useRef<HTMLInputElement>(null);
 
-  const [fileName, setFileName] = useState<string>();
+  const [fileName, setFileName] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  const [defectIntroduced, setDefectIntroduced] = useState<[string, number][]>([]);
-  const [genericFSD, setGenericFSD] = useState<[string, number][]>([]);
 
   const [meanRemained, setMeanRemained] = useState<number | null>(null);
   const [meanPfd, setMeanPfd] = useState<number | null>(null);
@@ -29,69 +27,48 @@ export default function Result() {
     e.preventDefault();
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      e.target.value = "";
       setFileName(file.name);
       setSelectedFile(file);
+      e.target.value = "";
     }
   };
 
   const handleSaveToFile = () => {
     const dataToSave = {
-    'input':
-      {...DropdownValues},
-    'output':{
-      'defectRemained' : defectRemained,
-      'pfd' : pfd
-    }
-  }
-  
-    // Step 2: Convert the merged object to a JSON string
-    const jsonString = JSON.stringify(dataToSave, null, 2); // Pretty-print with 2 spaces
-  
-    // Step 3: Create a Blob from the JSON string
+      'input': { ...DropdownValues },
+      'output': {
+        'defectRemained': defectRemained,
+        'pfd': pfd
+      }
+    };
+    const jsonString = JSON.stringify(dataToSave, null, 2);
     const blob = new Blob([jsonString], { type: "application/json" });
-  
-    // Step 4: Create a URL for the Blob
     const url = URL.createObjectURL(blob);
-  
-    // Step 5: Determine the file name
-    const downloadedFileName = fileName
-      ? fileName.replace(/\.[^/.]+$/, ".json") // Replace the extension with .json
-      : "InputOutput.json"; // Default name if no file is uploaded
-  
-    // Step 6: Create a temporary <a> element to trigger the download
+    const downloadedFileName = "results.json";
     const a = document.createElement("a");
     a.href = url;
-    a.download = downloadedFileName; // Use the dynamic file name
-    document.body.appendChild(a); // Append the <a> element to the DOM
-    a.click(); // Programmatically click the <a> element to trigger the download
-  
-    // Step 7: Clean up
-    document.body.removeChild(a); // Remove the <a> element from the DOM
-    URL.revokeObjectURL(url); // Release the Blob URL
+    a.download = downloadedFileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const handleUpload = () => {
     if (!selectedFile) {
-      console.log("No file selected");
+      alert("Please select a file to upload.");
       return;
     }
-  
     const reader = new FileReader();
     reader.onload = (event) => {
       if (event.target?.result) {
         try {
-          const content = event.target.result as string; // Get file content
-          console.log("File content:", content);
-  
-          // Parse JSON
+          const content = event.target.result as string;
           const data = JSON.parse(content);
-          const input = data['input']
-  
-          // Extract values
+          const input = data['input'];
+
           setDropdownValues((prev) => {
             const newValues = { ...prev };
-      
             Object.keys(input).forEach((tabLabel) => {
               if (newValues[tabLabel]) {
                 Object.keys(input[tabLabel]).forEach((itemLabel) => {
@@ -101,31 +78,24 @@ export default function Result() {
                 });
               }
             });
-      
             return newValues;
           });
-
           setDefectRemained(data['output']['defectRemained']);
           setPfd(data['output']['pfd']);
-
-          
         } catch (error) {
           console.error("Error parsing JSON file:", error);
+          alert("Failed to parse JSON file. Please check the file format.");
         }
       }
     };
-  
-    reader.readAsText(selectedFile); // Read file as text
+    reader.readAsText(selectedFile);
   };
 
-  // UseEffect to update the state when resultData changes
   useEffect(() => {
     if (!resultData?.data) return;
 
     const data = resultData.data;
-    const newDefectIntroduced: [string, number][] = [];
     const newDefectRemained: [string, number][] = [];
-    const newGenericFSD: [string, number][] = [];
     const newPfd: [string, number][] = [];
 
     setMeanRemained(data[2]?.[0] || null);
@@ -133,40 +103,26 @@ export default function Result() {
 
     if (data[0]) {
       data[0].forEach((item: any) => {
-        const iteration = String(item.iteration);
-        const value = item.value;
-
-        if (item["defect.type"] === "introduced") {
-          newDefectIntroduced.push([iteration, value]);
-        }
         if (item["defect.type"] === "remained") {
-          newDefectRemained.push([iteration, value]);
+          newDefectRemained.push([String(item.iteration), item.value]);
         }
       });
     }
 
     if (data[1]) {
       data[1].forEach((item: any) => {
-        const iteration = String(item.iteration);
-        const value = item.value;
-
-        if (item["defect.type"] === "generic_FSD") {
-          newGenericFSD.push([iteration, value]);
-        }
         if (item["defect.type"] === "PFD") {
-          newPfd.push([iteration, value]);
+          newPfd.push([String(item.iteration), item.value]);
         }
       });
     }
 
-    setDefectIntroduced(newDefectIntroduced);
     setDefectRemained(newDefectRemained);
-    setGenericFSD(newGenericFSD);
     setPfd(newPfd);
-  }, [resultData]);
+  }, [resultData, setDefectRemained, setPfd]);
 
   return (
-    <>
+    <div css={cssObj.pageWrapper}>
       {/* Header */}
       <header css={cssObj.header}>
         <div css={cssObj.container}>
@@ -175,15 +131,13 @@ export default function Result() {
               <Logo />
             </Link>
             <nav>
-              <button css={cssObj.active} onClick={() => router.push(ROUTER.HOME)}>
-                Bayesian Methods
-              </button>
+              <button onClick={() => router.push(ROUTER.HOME)}>Bayesian Methods</button>
               <button onClick={() => router.push(ROUTER.SST)}>Statistical Methods</button>
-              <button onClick={() => router.push(ROUTER.RESULT)}>Reliability Views</button>
+              <button css={cssObj.active} onClick={() => router.push(ROUTER.RESULT)}>Reliability Views</button>
             </nav>
           </div>
           <div css={cssObj.rightSection}>
-            <button css={cssObj.newButton} onClick={() => router.push(ROUTER.SETTINGS)}>
+            <button css={cssObj.settingsButton} onClick={() => router.push(ROUTER.SETTINGS)}>
               Settings
             </button>
             <Link href={ROUTER.SIGN_IN}>
@@ -193,101 +147,92 @@ export default function Result() {
         </div>
       </header>
 
-      {/* Title Section */}
-      <section id="results-title-section" css={[cssObj.container, cssObj.bayesianTitleSection]}>
-        <h1 css={cssObj.title}>Results</h1>
-      </section>
+      <main css={cssObj.mainContent}>
+        {/* Title Section */}
+        <section css={[cssObj.container, cssObj.titleSection]}>
+          <h1 css={cssObj.title}>Results</h1>
+        </section>
 
-      {/* File Upload Section */}
-      <section css={[cssObj.container, cssObj.scv]}>
-        <p>Upload saved results or save current one</p>
-        <div css={cssObj.fileUplaodForm}>
-          <div css={cssObj.filebox}>
-            <label>
-              <div>{fileName ?? "Choose file"}</div>
-            </label>
-            <input type="file" css={cssObj.uploadFile} ref={fileUploadRef} onChange={onChangeFile} />
+        {/* Original File Upload Section */}
+        <section css={[cssObj.container, cssObj.scv]}>
+            <div css={cssObj.fileUplaodForm}>
+                <div css={cssObj.filebox}>
+                    <label>
+                        <div>{fileName || "Choose file"}</div>
+                    </label>
+                    <input type="file" accept=".json" css={cssObj.uploadFile} ref={fileUploadRef} onChange={onChangeFile} />
+                </div>
+                <button onClick={() => fileUploadRef.current?.click()}>Browse</button>
+                <button onClick={handleUpload}>Upload</button>
+                <button onClick={handleSaveToFile}>Save</button>
+            </div>
+        </section>
+
+        {/* Grid for plot boxes */}
+        <div css={cssObj.resultsGrid}>
+          {/* First Plot Box */}
+          <div css={cssObj.resultBox}>
+            <h2>IC_Total_Remained_Defect</h2>
+            <div css={cssObj.metricDisplay}>
+              <span>MEAN:</span>
+              <span css={cssObj.metricValue}>{meanRemained?.toFixed(4) ?? "N/A"}</span>
+            </div>
+            <div css={cssObj.chartContainer}>
+              {defectRemained && defectRemained.length > 1 ? (
+                <Chart
+                  chartType="AreaChart"
+                  width="100%"
+                  height="300px"
+                  data={[["Iterations", "Values"], ...defectRemained]}
+                  options={{
+                    titleTextStyle: { color: "#111827", fontSize: 16, bold: false },
+                    colors: ["#2563EB"],
+                    backgroundColor: 'transparent',
+                    areaOpacity: 0.1,
+                    chartArea: { width: "90%", height: "80%" },
+                    hAxis: { textStyle: { color: "#9AA1A9" } },
+                    vAxis: { textStyle: { color: "#9AA1A9" } },
+                    legend: 'none',
+                  }}
+                />
+              ) : (
+                <div css={cssObj.chartPlaceholder}>No data to display</div>
+              )}
+            </div>
           </div>
 
-          <button onClick={() => fileUploadRef.current?.click()}>Browse</button>
-          <button onClick={handleUpload}>Upload</button>
-          <button onClick={handleSaveToFile}>Save</button>
-        </div>
-      </section>
-
-      {/* Charts Section */}
-      <section css={cssObj.container}>
-        <h1 css={cssObj.title}>Plots</h1>
-      </section>
-
-      {/* Chart 1 */}
-      <section css={[cssObj.container, cssObj.chart]}>
-        <div>
-          <span css={cssObj.meantext}>MEAN:</span>
-          <span css={cssObj.meannum}>{meanRemained}</span>
-        </div>
-
-        <div className="chart-container">
-        {defectRemained && defectRemained.length > 0 ? (
-          <Chart
-            chartType="AreaChart"
-            data={[["Iterations", "Values"], ...defectRemained]}
-            options={{
-              title: "IC_Total_Remained_Defect",
-              titleTextStyle: { color: "#111827", fontSize: 12 },
-              colors: ["#2563EB"],
-              areaOpacity: 0.05,
-              chartArea: { width: 1090, left: 30, top: 20 },
-              hAxis: { textStyle: { color: "#9AA1A9" } },
-              vAxis: { textStyle: { color: "#9AA1A9" } },
-            }}
-          />
-       ) : (
-    <div className="chart-placeholder">
-      <svg width="400" height="200">
-        <line x1="0" y1="50" x2="400" y2="50" stroke="lightgray" strokeWidth="2" />
-        <line x1="0" y1="150" x2="400" y2="150" stroke="lightgray" strokeWidth="2" />
-      </svg>
-    </div>
-  )}
-</div>
-      </section>
-
-      {/* Chart 2 */}
-      <section css={[cssObj.container, cssObj.chart]}>
-        <div>
-          <span css={cssObj.meantext}>MEAN:</span>
-          <span css={cssObj.meannum}>{meanPfd}</span>
-        </div>
-
-        <div className="chart-container">
-          {pfd && pfd.length > 0 ? (
-            <Chart
-              chartType="AreaChart"
-              data={[["Iterations", "Values"], ...pfd]}
-              options={{
-                title: "PFD",
-                titleTextStyle: { color: "#111827", fontSize: 12 },
-                colors: ["#2563EB"],
-                areaOpacity: 0.05,
-                chartArea: { width: 1090, left: 30, top: 20 },
-                hAxis: { textStyle: { color: "#9AA1A9" } },
-                vAxis: { textStyle: { color: "#9AA1A9" } },
-              }}
-            />
-          ) : (
-            <div className="chart-placeholder">
-              <svg width="400" height="200">
-                <line x1="0" y1="50" x2="400" y2="50" stroke="lightgray" strokeWidth="2" />
-                <line x1="0" y1="150" x2="400" y2="150" stroke="lightgray" strokeWidth="2" />
-              </svg>
+          {/* Second Plot Box */}
+          <div css={cssObj.resultBox}>
+            <h2>PFD (Probability of Failure on Demand)</h2>
+            <div css={cssObj.metricDisplay}>
+              <span>MEAN:</span>
+              <span css={cssObj.metricValue}>{meanPfd?.toFixed(4) ?? "N/A"}</span>
             </div>
-          )}
+            <div css={cssObj.chartContainer}>
+              {pfd && pfd.length > 1 ? (
+                <Chart
+                  chartType="AreaChart"
+                  width="100%"
+                  height="300px"
+                  data={[["Iterations", "Values"], ...pfd]}
+                  options={{
+                    titleTextStyle: { color: "#111827", fontSize: 16, bold: false },
+                    colors: ["#2563EB"],
+                    backgroundColor: 'transparent',
+                    areaOpacity: 0.1,
+                    chartArea: { width: "90%", height: "80%" },
+                    hAxis: { textStyle: { color: "#9AA1A9" } },
+                    vAxis: { textStyle: { color: "#9AA1A9" } },
+                    legend: 'none',
+                  }}
+                />
+              ) : (
+                <div css={cssObj.chartPlaceholder}>No data to display</div>
+              )}
+            </div>
+          </div>
         </div>
-
-      </section>
-    </>
+      </main>
+    </div>
   );
 }
-
-
