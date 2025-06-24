@@ -3,9 +3,18 @@ import { FONT_SIZE } from "@/constants/FONT_SIZE";
 import { css } from "@emotion/react";
 
 export const cssObj = {
+  // New wrapper to control the page layout, especially for the footer button
+  pageWrapper: css`
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f9fafb; // Light grey background for the whole page
+  `,
+
   header: css`
     background-color: ${COLORS.gray800};
     height: 60px;
+    flex-shrink: 0; // Prevent header from shrinking
     & > div {
       display: flex;
       align-items: center;
@@ -44,237 +53,137 @@ export const cssObj = {
     margin: 0 auto;
     padding: 0 20px;
   `,
-  active: css`
-    color: ${COLORS.white};
+
+  // New style for the main content area
+  mainContent: css`
+    flex-grow: 1; // Allows main content to fill available space
+    padding-bottom: 100px; // Add padding to avoid content being hidden by the save button
   `,
+
+  settingsTitleSection: css`
+    margin-top: 40px;
+    margin-bottom: 24px;
+  `,
+
   title: css`
     font-size: ${FONT_SIZE["3xl"]};
+    color: ${COLORS.gray800};
+    font-weight: 700;
   `,
-  scv: css`
-    & > p {
-      margin-bottom: 4px;
-      color: ${COLORS.gray700};
-      font-size: ${FONT_SIZE.sm};
-    }
-  `,
-  filebox: css`
-    position: relative;
-    & > label > div {
-      cursor: pointer;
-      width: 430px;
-      height: 38px;
-      border: 1px solid ${COLORS.gray300};
-      border-radius: 5px 0 0 5px;
-      line-height: 38px;
-      padding-left: 8px;
-      color: ${COLORS.gray500};
-      font-size: ${FONT_SIZE.sm};
-    }
-  `,
-  fileUplaodForm: css`
-    display: flex;
-    margin-bottom: 45px;
-    & button {
-      width: 74px;
-      font-size: ${FONT_SIZE.sm};
-      border: 1px solid ${COLORS.gray300};
-      background-color: ${COLORS.gray50};
-      color: ${COLORS.gray500};
-      transition: 0.3s;
-      &:hover {
-        background-color: ${COLORS.gray200};
-      }
-      &:last-of-type {
-        border-radius: 0 5px 5px 0;
-      }
-    }
-  `,
-  uploadFile: css`
-    display: none;
-  `,
-  tabs: css`
-    margin-top: 30px;
-    background-color: ${COLORS.gray100};
-    width: 100vw;
-    height: calc(100vh - (60px + 94.5px + 58.09px + 45px));
-    padding-top: 90px;
 
-    & > div {
-      display: flex;
-    }
-    & > div > ul {
-      font-size: ${FONT_SIZE.xs};
-      margin-right: 63px;
-      width: 155px;
-    }
-    & > div > ul > li {
-      padding-bottom: 16px;
-      cursor: default;
-      color: ${COLORS.gray600};
-    }
-    & > div > ul > li.active {
-      color: ${COLORS.gray600};
-      font-weight: bold;
-    }
-    & > div > div {
-      width: 1022px;
-    }
-  `,
-  activeTab: css`
-    color: ${COLORS.blue600} !important;
-    font-weight: bold;
-  `,
-  tabContent: css`
-    display: flex;
-    flexDirection : column;
-
-    & > div .tab-content.show {
-      display: block;
-      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.06);
-    }
-  `,
-  show: css`
-    display: block;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.06);
-  `,
-  content: css`
-    padding: 70px 46px;
-    width: 100%;
-    background-color: ${COLORS.white};
-    border-radius: 5px 5px 0 0;
-
-    & > ul {
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      display: flex;
-    }
-    & > ul > li {
-      width: 33.3%;
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 35px;
-    }
-
-    & > ul > li > label {
-      font-size: ${FONT_SIZE.sm};
-      margin-bottom: 4px;
-      color: ${COLORS.gray700};
-    }
-    & > ul > li > select {
-      width: 250px;
-      max-width: 250px;
-      height: 38px;
-      border: 1px solid ${COLORS.gray300};
-      border-radius: 5px;
-      font-size: ${FONT_SIZE.sm};
-      color: ${COLORS.gray500};
-    }
-  `,
-  lastItem: css`
-    margin-bottom: 0;
-  `,
-  footer: css`
-    width: 100%;
-    height: 56px;
+  rightSection: css`
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    background-color: ${COLORS.gray50};
-    border-radius: 0 0 5px 5px;
+    gap: 20px;
   `,
-  footerButton: css`
-    margin-right: 24px;
-    background-color: ${COLORS.blue600};
+  
+  newButton: css`
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: ${COLORS.gray700};
     color: ${COLORS.white};
     border: none;
-    border-radius: 4px;
-    font-size: ${FONT_SIZE.xs};
-    padding: 8px 16px;
-  `,
-  navigateButton: css`
-    background-color: ${COLORS.gray50};
-    color: ${COLORS.gray500};
-    border: none;
-    border-radius: 4px;
-    font-size: ${FONT_SIZE.xs};
-    padding: 8px 16px;
-    &[data-button="next"] {
-      margin-right: 16px;
+    font-size: ${FONT_SIZE.sm};
+    &:hover {
+      background-color: ${COLORS.gray600};
     }
   `,
-  settingsTitleSection: css`
-    margin-top: 30px;
+
+  // A grid layout for all the settings cards
+  settingsGrid: css`
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px;
   `,
-  rightSection: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '5mm', // This creates the 10mm spacing between LogoutImage and the new button
-  },
-  
-  newButton: {
-    // Add your button styling here
-    padding: '8px 16px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  },
 
-  listItem : {
-    display: 'flex',              // Flexbox to align label and input side by side
-    alignItems: 'center',         // Vertically center them
-    justifyContent: 'flex-start', // Align items to the start of the container
-    flexWrap: 'nowrap',           // Prevent wrapping to the next line
-    width: '100%',                // Ensure full width is used, preventing overflow
-    position: 'relative',        // Allows fine-tuning with "top"
-    top: '-40px',                // Moves labels & inputs **up** within the container
-  },
+  // The style for each individual setting "card"
+  settingBox: css`
+    background-color: ${COLORS.white};
+    border: 1px solid ${COLORS.gray200};
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    /* For text and number inputs, stack the label and input vertically */
+    &:not(:has(input[type="checkbox"])) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  `,
 
-  // Add this to your cssObj
+  // Style to make a setting box span the full width of the grid
+  longSettingBox: css`
+    grid-column: 1 / -1; // Span all columns
+  `,
+
+  inputLabel : css`
+    font-size: ${FONT_SIZE.sm};
+    font-weight: 500;
+    color: ${COLORS.gray700};
+  `,
+
   inputBox: css`
-  padding: 5px;
-  margin-left: 0.5cm;
-  border-radius: 4px;
-  border: 1px solid ${COLORS.gray300};
-  min-width: 70px; // Minimum width for small values
-  transition: width 0.2s ease; // Smooth transition for width changes
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid ${COLORS.gray300};
+    font-size: ${FONT_SIZE.sm};
+    color: ${COLORS.gray800};
+    background-color: ${COLORS.white};
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
 
-  &[type='number'] {
-    -moz-appearance: textfield;
-  }
+    &:focus {
+      outline: none;
+      border-color: ${COLORS.blue500};
+      box-shadow: 0 0 0 1px ${COLORS.blue500};
+    }
 
-  &[type='number']::-webkit-outer-spin-button,
-  &[type='number']::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-`,
+    &[type='number'] {
+      -moz-appearance: textfield;
+    }
 
-  inputLabel : {
-    fontWeight: 'bold',           // Bold for the label
-    width: '500px',               // Fixed width for the label (adjust as necessary)
-    whiteSpace: 'nowrap',         // Ensure label text doesn’t wrap
-    position: 'relative',
-    top: '-5px',   // Fine-tune this value to move labels slightly upwards
-  },
+    &[type='number']::-webkit-outer-spin-button,
+    &[type='number']::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
 
-  saveButtonContainer: {
-    position: 'absolute',
-    bottom: '20px',
-    right: '20px',
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
+    &[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+    }
+  `,
+
+  // Fixed container at the bottom right for the save button
+  saveButtonContainer: css`
+    position: fixed;
+    bottom: 30px;
+    right: 40px;
+  `,
   
-  saveButton: {
-    padding: '10px 20px',
-    backgroundColor: '#007bff',  // Blue color
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    fontSize: '16px',
-    '&:hover': {
-      backgroundColor: '#0056b3',  // Darker blue on hover
-    },
-  },
+  saveButton: css`
+    padding: 12px 24px;
+    background-color: ${COLORS.blue600};
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: ${FONT_SIZE.sm};
+    font-weight: 600;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: ${COLORS.blue700};
+    }
+  `,
 };

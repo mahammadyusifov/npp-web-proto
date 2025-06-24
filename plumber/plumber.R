@@ -214,7 +214,6 @@ function(req) {
   nThin  <- as.numeric(parsed_data$`settings`$`nThin`)
   autoCloseWinBugs  <- as.logical(parsed_data$`settings`$`autoCloseWinBugs`)
   computeDIC  <- as.logical(parsed_data$`settings`$`computeDIC`)
-  winBugsExecutableDir  <- parsed_data$`settings`$`winBugsExecutableDir`
   workingDir  <- parsed_data$`settings`$`workingDir`
   
   print("This is parsed_data[settings] : ")

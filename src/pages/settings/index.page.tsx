@@ -6,11 +6,7 @@ import LogoutImage from "@/assets/logout.svg";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import React from "react";
-import { useEffect } from "react";
-
 import { useSettingsContext } from "@/contexts/settingsContext";
-
-export const Context = React.createContext();
 
 export default function SettingsPage() {
     const router = useRouter();
@@ -19,6 +15,7 @@ export default function SettingsPage() {
       setnChains, setnIter, setnBurnin, setautoCloseWinBugs, setcomputeDIC, setnThin, setwinBugsExecutableDir, setworkingDir
     } = useSettingsContext();
 
+    // The user's original state structure is preserved
     const UnsavednChains = nChains
     const UnsavednIter = nIter
     const UnsavednBurnin = nBurnin
@@ -27,7 +24,6 @@ export default function SettingsPage() {
     const UnsavednThin = nThin
     const UnsavedwinBugsExecutableDir = winBugsExecutableDir
     const UnsavedworkingDir = workingDir
-
 
     const [inputValues, setInputValues] = useState({
       UnsavednChains,
@@ -40,13 +36,13 @@ export default function SettingsPage() {
       UnsavedworkingDir
     });
 
+    
     const handleInputChange = (e, key) => {
       const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
       setInputValues(prevValues => ({
         ...prevValues, 
         [determineValue(key)]: value
       }));
-      
     }
 
     const handleSave = () => {
@@ -58,9 +54,9 @@ export default function SettingsPage() {
       setnThin(inputValues.UnsavednThin);
       setwinBugsExecutableDir(inputValues.UnsavedwinBugsExecutableDir);
       setworkingDir(inputValues.UnsavedworkingDir);
+      alert('Settings Saved!');
     }
     
-
     const determineType = (key) => {
       if (key.includes("N")) {return 'number'}
       else if (key.includes('B')) {return 'checkbox'}
@@ -68,32 +64,29 @@ export default function SettingsPage() {
     }
 
     const determineValue = (key) => {
-      if (key === 'N1') {
-        return 'UnsavednChains'
-      }
-      else if (key === 'N2') {
-        return 'UnsavednIter'
-      }
-      else if (key === 'N3'){
-        return 'UnsavednBurnin'
-      }
-      else if (key === 'N4'){
-        return 'UnsavednThin'
-      }
-      else if (key === 'B1'){
-        return 'UnsavedautoCloseWinBugs'
-      }
-      else if (key === 'B2'){
-        return 'UnsavedcomputeDIC'
-      }
-      else if (key === 'S1'){
-        return 'UnsavedwinBugsExecutableDir'
-      }
-      else {return 'UnsavedworkingDir'}
+      if (key === 'N1') return 'UnsavednChains';
+      if (key === 'N2') return 'UnsavednIter';
+      if (key === 'N3') return 'UnsavednBurnin';
+      if (key === 'N4') return 'UnsavednThin';
+      if (key === 'B1') return 'UnsavedautoCloseWinBugs';
+      if (key === 'B2') return 'UnsavedcomputeDIC';
+      if (key === 'S1') return 'UnsavedwinBugsExecutableDir';
+      return 'UnsavedworkingDir';
     }
 
+    const settingsFields = [
+        { label: "Number of Chains", key: "N1" },
+        { label: "Number of Iterations", key: "N2" },
+        { label: "Number of Burns", key: "N3" },
+        { label: "Thinning Rate", key: "N4" },
+        { label: "AutoClose WinBugs", key: "B1" },
+        { label: "Compute DIC, pD and deviance", key: "B2" },
+        { label: "Directory for OpenBugs Executable", key: "S1", long: true },
+        { label: "Working directory for input/output from WinBugs execution", key: "S2", long: true }
+    ];
+
     return (
-      <> 
+      <div css={cssObj.pageWrapper}> 
         {/* Header starts here */}
         <header css={cssObj.header}>
             <div css={cssObj.container}>
@@ -103,6 +96,7 @@ export default function SettingsPage() {
                   </Link>
                   <nav>
                     <button
+                      className="active" 
                       css={cssObj.active}
                       onClick={() => router.push(ROUTER.HOME)}
                     >
@@ -131,59 +125,45 @@ export default function SettingsPage() {
         </header>
         {/* Header ends here */}
         
-        {/* Section starts here */}
-        <section
-            id="settings-title-section"
-            css={[cssObj.container, cssObj.settingsTitleSection]}
-        >
-            <h1 css={cssObj.title}>BBN Hyperparameters</h1>
-        </section>
-        {/* Section ends here */}
+        <main css={cssObj.mainContent}>
+            <section
+                id="settings-title-section"
+                css={[cssObj.container, cssObj.settingsTitleSection]}
+            >
+                <h1 css={cssObj.title}>BBN Hyperparameters</h1>
+            </section>
 
-        <section css={cssObj.tabs}>
-          <div css={cssObj.container}>
-              <ul>
-                {/* List with input boxes */}
-                {[
-                  { label: "Number of Chains", key: "N1" },
-                  { label: "Number of Iterations", key: "N2" },
-                  { label: "Number of Burns", key: "N3" },
-                  { label: "AutoClose WinBugs", key: "B1" },
-                  { label: "Compute DIC, pD and deviance", key: "B2" },
-                  { label: "Thinning Rate", key: "N4" },
-                  { label: "Directory for WinBugs Executable", key: "S1" },
-                  { label: "Working directory for input/output from WinBugs execution", key: "S2" }
-                ].map(({ label, key }) => (
-                  <li key={`tab-${key}`} css={cssObj.activeTab}>
-                    <div css={cssObj.listItem}>
-                      <label htmlFor={key} css={cssObj.inputLabel}>{label}</label>
-                      <input
-                        type={determineType(key)}
-                        id={key}
-                        value={determineType(key) === 'checkbox' ? undefined : inputValues[determineValue(key) as keyof typeof inputValues] || ""}
-                        checked={determineType(key) === 'checkbox' ? inputValues[determineValue(key) as keyof typeof inputValues] : undefined}
-                        onChange={(e) => handleInputChange(e, key)}
-                        css={cssObj.inputBox}
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-          {/* Save Button */}
-          <div css={cssObj.saveButtonContainer}>
-              <button 
-                css={cssObj.saveButton}
-                onClick={() => {
-                  handleSave()
-                }}
-              >
-                Save
-              </button>
-            </div>
-          {/* Save Button ends here */}
-        </section>
-      </>
+            <section css={cssObj.settingsGrid}>
+              {settingsFields.map(({ label, key, long }) => {
+                const valueKey = determineValue(key);
+                const inputType = determineType(key);
+                return (
+                  <div key={key} css={[cssObj.settingBox, long && cssObj.longSettingBox]}>
+                    <label htmlFor={key} css={cssObj.inputLabel}>{label}</label>
+                    <input
+                      type={inputType}
+                      id={key}
+                      value={inputType === 'checkbox' ? undefined : inputValues[valueKey as keyof typeof inputValues] || ""}
+                      checked={inputType === 'checkbox' ? !!inputValues[valueKey as keyof typeof inputValues] : undefined}
+                      onChange={(e) => handleInputChange(e, key)}
+                      css={cssObj.inputBox}
+                    />
+                  </div>
+                );
+              })}
+            </section>
+        </main>
+        
+        {/* Save Button */}
+        <div css={cssObj.saveButtonContainer}>
+            <button 
+              css={cssObj.saveButton}
+              onClick={handleSave}
+            >
+              Save
+            </button>
+        </div>
+        {/* Save Button ends here */}
+      </div>
     );
 }

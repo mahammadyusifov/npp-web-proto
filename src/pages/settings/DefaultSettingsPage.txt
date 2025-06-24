@@ -150,7 +150,8 @@ export default function SettingsPage() {
                   { label: "Number of Burns", key: "N3" },
                   { label: "AutoClose WinBugs", key: "B1" },
                   { label: "Compute DIC, pD and deviance", key: "B2" },
-                  { label: "Thinning Rate", key: "N4" },,
+                  { label: "Thinning Rate", key: "N4" },
+                  { label: "Directory for WinBugs Executable", key: "S1" },
                   { label: "Working directory for input/output from WinBugs execution", key: "S2" }
                 ].map(({ label, key }) => (
                   <li key={`tab-${key}`} css={cssObj.activeTab}>
