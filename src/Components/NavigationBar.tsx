@@ -11,7 +11,7 @@ import React, { useState, Children, cloneElement } from 'react';
 const NavigationBar = ({
   width = '100%',
   height = '60px',
-  color = 'bg-gray-300',
+  color = 'bg-gray-100',
   center = { x: '50%', y: '0%' },
   shape = 'sharp-rectangle',
   children,
@@ -51,10 +51,6 @@ const NavigationBar = ({
   return (
     <div style={barStyle} className={`${color} ${shapeClass} shadow-lg transition-all duration-300`}>
       <div className="relative w-full h-full">
-        {/*
-          We iterate over the children and clone each one, injecting the
-          'active' and 'onClick' props automatically.
-        */}
         {Children.map(children, (child) => {
           if (React.isValidElement(child)) {
             return cloneElement(child, {

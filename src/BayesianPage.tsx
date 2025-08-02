@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import Box from './Components/SearchSaveUploadBox';
+
 import { handleFileSelection, handleUpload, handleSave } from './utilities/upload-save-browse';
+import NavigationBar from './Components/NavigationBar';
 
 function BayesianPage() {
 
@@ -8,14 +9,12 @@ function BayesianPage() {
 
   return (
     <>
-        <Box
-        onFileSelect={(selectedFile) => handleFileSelection(selectedFile, setSelectedFile)}
-        onUpload={handleUpload}
-        onSave={handleSave}
-        acceptedFileTypes=".json"
-        placeholder="Select your simulation input file"
-        width="50%"
-        center={{ x: '25%', y: '30%' }}
+      <NavigationBar 
+      width='100%'
+      height='650px'
+      color = 'bg-blue-300'
+      center = {{ x: '50%', y: '75%' }}
+      shape = 'sharp-rectangle'
       />
     </>
   )
