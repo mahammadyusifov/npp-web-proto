@@ -1,21 +1,23 @@
 import { useState } from 'react';
 
-import { handleFileSelection, handleUpload, handleSave } from './utilities/upload-save-browse';
-import NavigationBar from './Components/NavigationBar';
-
+import Menu from './Components/Menu';
+import Rectangular from './components/Rectangle';
 function BayesianPage() {
 
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
+  const [adults, setAdults] = useState(6);
+  
   return (
-    <>
-      <NavigationBar 
-      width='100%'
+    <>      
+      <Rectangular 
+      width='72%'
       height='650px'
-      color = 'bg-blue-300'
-      center = {{ x: '50%', y: '75%' }}
+      color = 'bg-gray-300'
+      center = {{ x: '90%', y: '75%' }}
       shape = 'sharp-rectangle'
-      />
+      >
+      </Rectangular>
+
+      <Menu/>
     </>
   )
 }

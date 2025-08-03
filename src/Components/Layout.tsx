@@ -6,11 +6,11 @@ const Layout = ({ children }) => {
     <>
         <NavigationBar>
 
-          <NavItem text="Bayesian Methods" position={{ x: '7%', y: '40%' }} />
+          <NavItem text="Bayesian Methods" position={{ x: '35%', y: '40%' }} />
        
-          <NavItem text = "Statistical Methods" position={{ x: '19%', y: '40%' }} />
+          <NavItem text = "Statistical Methods" position={{ x: '49%', y: '40%' }} />
 
-          <NavItem text = "Reliabiliity Views" position={{ x: '31.5%', y: '40%' }} />
+          <NavItem text = "Reliabiliity Views" position={{ x: '63.5%', y: '40%' }} />
 
           <NavItem text = "Settings" position={{ x: '95%', y: '40%' }} />
 
