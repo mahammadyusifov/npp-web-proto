@@ -10,7 +10,7 @@ import React, { useState, Children, cloneElement } from 'react';
 
 const NavigationBar = ({
   width = '100%',
-  height = '60px',
+  height = '6.4%',
   color = 'bg-gray-100',
   center = { x: '50%', y: '0%' },
   shape = 'sharp-rectangle',

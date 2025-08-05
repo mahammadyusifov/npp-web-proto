@@ -1,6 +1,6 @@
 import React, { useState, Children, cloneElement } from 'react';
 
-// --- Customizable Navigation Bar Component ---
+// --- Customizable Rectangle Component ---
 // This component is now "smart". It manages the active state of its children internally.
 //
 // Props:
@@ -8,17 +8,17 @@ import React, { useState, Children, cloneElement } from 'react';
 // - onNavigate: (Optional) A function that gets called with the text of the item when it's clicked.
 // - ... (all other existing props: width, height, color, etc.)
 
-const Rectangular = ({
-  width = '100%',
-  height = '60px',
-  color = 'bg-gray-100',
-  center = { x: '50%', y: '0%' },
+const Rectangle = ({
+  width = '50%',
+  height = '50%',
+  color = 'bg-red-100',
+  center = { x: '50%', y: '50%' },
   shape = 'sharp-rectangle',
   children,
   defaultActive, 
   onNavigate,      
 }) => {
-  // This variable remembers which hoverable is currently active.
+  // The state is initialized with the 'defaultActive' prop, or the text of the first child.
   const [activeItem, setActiveItem] = useState(defaultActive || (Children.toArray(children)[0] as React.ReactElement)?.props?.text || '');
 
   const handleItemClick = (itemName) => {
@@ -65,4 +65,4 @@ const Rectangular = ({
   );
 };
 
-export default Rectangular;
+export default Rectangle;

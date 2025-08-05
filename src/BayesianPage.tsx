@@ -1,23 +1,12 @@
-import { useState } from 'react';
-
-import Menu from './Components/Menu';
-import Rectangular from './components/Rectangle';
+import Background from "./components/BayesianPage/background"
+import Menu from "./components/BayesianPage/menu"
 function BayesianPage() {
 
-  const [adults, setAdults] = useState(6);
   
   return (
-    <>      
-      <Rectangular 
-      width='72%'
-      height='650px'
-      color = 'bg-gray-300'
-      center = {{ x: '90%', y: '75%' }}
-      shape = 'sharp-rectangle'
-      >
-      </Rectangular>
-
-      <Menu/>
+    <>  
+     <Background /> 
+    <Menu />
     </>
   )
 }
