@@ -1,37 +1,78 @@
 import Button from "../../utilities/button";
 import DropDown from "../../utilities/dropdown";
 import { useState } from "react";
+import { TABS } from "../../constants/tabs";
+
+const initializeState = () => {
+  const initialState = {};
+  TABS.forEach(tab => {
+    tab.children.forEach(child => {
+      const key = `${tab.label}/${child.label}`;
+      initialState[key] = child.values[0];
+    });
+  });
+  return initialState;
+};
 
 const Menu = () => {
-const labels = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 
-  // 2. Define the vertical separation as a PERCENTAGE.
-  // This value is the percentage of the parent container's height.
-  const separation = 3.5; // Each button's top is 3.5% lower than the last.
+  const labels = TABS.map(tab => tab.label);
+  
+  const labelSeparation = 5;
 
-  // State to track which button is currently active
-  const [activeButton, setActiveButton] = useState('A');
+  const dropdownXSeparation = 15; // Increased separation for dropdowns
+  const dropdownYSeparation = 18; // Increased separation for dropdowns
+  
+  const [activeLabel, setActiveLabel] = useState('A');
 
-  return (
-    // Note: For percentage-based 'top' (y) positioning to work correctly,
-    // the parent container of this component must have a defined height.
-    // For example, the parent could have a style of { height: '100vh' }.
+  const [dropdownValues, setDropdownValues] = useState(initializeState());
+
+  const handleSelectionChange = (key, value) => {
+    setDropdownValues(prevDropdownValues => ({
+      ...prevDropdownValues,
+      [key]: value,
+    }));
+  };
+
+  const activeLabelAndDropdowns = TABS.find(tab => tab.label === activeLabel);
+
+
+
+return (
+
     <>
+      {/* --- LABELS --- */}
       {labels.map((label, index) => (
         <Button
-          key={label}
+          key={label} // Adding key prop is important for lists
           text={label}
-          active={activeButton === label}
-          onClick={() => setActiveButton(label)}
-          x={'50%'}
-          // The y position is now calculated using percentages.
-          // We start at 5% from the top and add the separation for each button.
-          y={`${5 + index * separation}%`}
-          width={'60px'}
-          height={'30px'}
+          active={activeLabel === label}
+          onClick={() => setActiveLabel(label)}
+          x={'2%'}
+          y={`${15 + index * labelSeparation}%`}
+          width={'20%'}
+          height={'5%'}
           shape={'smooth'}
         />
       ))}
+
+      {activeLabelAndDropdowns?.children.map(child => {
+        const uniqueKey = `${activeLabelAndDropdowns.label}/${child.label}`;
+        // The DropDown needs a unique key as well.
+        return (
+          <DropDown
+            key={uniqueKey} 
+            options={child.values}
+            selectedOption={dropdownValues[uniqueKey] || child.values[0]}
+            onSelect={(value) => handleSelectionChange(uniqueKey, value)}
+            x={`${44 + (activeLabelAndDropdowns.children.indexOf(child) % 4) * dropdownXSeparation}%`} // Increased separation
+            y={`${17 + Math.floor(activeLabelAndDropdowns.children.indexOf(child) / 4) * dropdownYSeparation}%`} // Increased separation
+            width="15%"
+            height="5%"
+            textColor="text-gray-800"
+          />
+        );
+      })}
     </>
   );
 }
