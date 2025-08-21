@@ -1231,6 +1231,146 @@ const NavItem = ({
 export default NavItem;
 
 ---
+src/utilities/bayesian_submit_button/submitButton.logic.ts:
+
+import type { Dispatch, SetStateAction } from 'react';
+
+// This defines the structure of the dropdown data object
+export interface DropdownValues {
+  [key: string]: string;
+}
+
+export type SubmissionState = 'idle' | 'submitting' | 'success' | 'error';
+
+type SetState<T> = Dispatch<SetStateAction<T>>;
+
+// This is the function that formats your data into the correct JSON structure for the API
+const formatPayload = (values: DropdownValues) => {
+  const payload: { [key: string]: any } = {};
+
+  for (const key in values) {
+    const [tabLabel, childLabel] = key.split('/');
+    if (!payload[tabLabel]) {
+      payload[tabLabel] = {};
+    }
+    payload[tabLabel][childLabel] = values[key];
+  }
+
+  payload['FP'] = { 'FP Input': '120' };
+  payload['settings'] = {
+    nChains: '4',
+    nIter: '10000',
+    nBurnin: '2000',
+    nThin: '1',
+    computeDIC: 'true',
+    workingDir: '/app/results',
+  };
+  return payload;
+};
+
+export const handleSubmitLogic = async (
+  dropdownValues: DropdownValues,
+  setIsLoading: SetState<boolean>,
+  setStatusMessage: SetState<string>,
+  setSubmissionState: SetState<SubmissionState>
+) => {
+  setIsLoading(true);
+  setStatusMessage('Submitting...');
+  setSubmissionState('submitting');
+
+  const API_URL = 'https://a2gxqrwnzi.execute-api.ap-northeast-2.amazonaws.com/dev/start-simulation';
+  const payload = formatPayload(dropdownValues);
+  const requestBody = { data: JSON.stringify(payload) };
+
+  try {
+    // These are the required options for sending JSON data in a POST request
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message || `API Error: ${response.status}`);
+    
+    setStatusMessage('Success!');
+    setSubmissionState('success');
+
+  } catch (error) {
+    console.error('Submission failed:', error);
+    setStatusMessage('Error!');
+    setSubmissionState('error');
+
+  } finally {
+    setTimeout(() => {
+      setStatusMessage('Submit');
+      setIsLoading(false);
+      setSubmissionState('idle');
+    }, 5000);
+  }
+};
+---
+src/utilities/bayesian_submit_button/submitButton.tsx:
+import React, { useState } from 'react';
+import Button from '../button';
+import { handleSubmitLogic } from './submitButton.logic';
+import type { DropdownValues, SubmissionState } from './submitButton.logic';
+
+interface SubmitButtonProps {
+  dropdownValues: DropdownValues;
+  x?: string;
+  y?: string;
+  width?: string;
+  height?: string;
+  shape?: 'smooth' | 'sharp' | 'circle';
+  before_hover_color?: string;
+  hover_color?: string;
+  click_color?: string;
+}
+
+const SubmitButton: React.FC<SubmitButtonProps> = ({
+  dropdownValues,
+  before_hover_color = 'bg-red-500',
+  hover_color = 'hover:bg-blue-500',
+  click_color = 'active:bg-green-500',
+  ...buttonProps
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('Submit');
+  const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
+
+  const handleClick = () => {
+    handleSubmitLogic(dropdownValues, setIsLoading, setStatusMessage, setSubmissionState);
+  };
+  
+  // Combine the hover and click styles into one string.
+  const interactionClasses = `${hover_color} ${click_color} text-white`;
+
+  return (
+    <Button
+      text={statusMessage}
+      onClick={handleClick}
+      
+      // --- THE WORKAROUND IS HERE ---
+      // 1. We force the button into its "active" state. This makes it use
+      //    `activeColor` for its background, avoiding the `bg-transparent` issue.
+      active={true}
+      
+      // 2. We pass our desired default color (red) into the `activeColor` prop.
+      activeColor={before_hover_color}
+      
+      // 3. We pass our hover (blue) and click (green) styles as custom classes.
+      customClasses={interactionClasses}
+      
+      {...buttonProps}
+    />
+  );
+};
+
+export default SubmitButton;
+---
 
 src/BayesianPage.tsx:
 
@@ -1239,6 +1379,7 @@ import Background from "./components/BayesianPage/background";
 import Menu from "./components/BayesianPage/menu";
 import { TABS } from "./constants/tabs"; 
 import SelectionBar from './utilities/searchbar';
+import SubmitButton from './utilities/bayesian_submit_button/submitButton'
 
 const initializeState = () => {
   const initialState = {};
@@ -1287,12 +1428,25 @@ function BayesianPage() {
         activeLabelAndDropdowns={activeLabelAndDropdowns}
       />
 
+      <SubmitButton
+        dropdownValues={dropdownValues}
+        x="87%"
+        y="90%"
+        width="8%"
+        height="5%"
+        shape="smooth"
+        before_hover_color="bg-red-700"
+        hover_color="hover:bg-blue-600"
+        click_color="active:bg-green-500"
+      />
 
+    
     </>
   );
 }
 
 export default BayesianPage;
+
 
 ---
 

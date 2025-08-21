@@ -3,6 +3,7 @@ import Background from "./components/BayesianPage/background";
 import Menu from "./components/BayesianPage/menu";
 import { TABS } from "./constants/tabs"; 
 import SelectionBar from './utilities/searchbar';
+import SubmitButton from './utilities/bayesian_submit_button/submitButton'
 
 const initializeState = () => {
   const initialState = {};
@@ -51,7 +52,19 @@ function BayesianPage() {
         activeLabelAndDropdowns={activeLabelAndDropdowns}
       />
 
+      <SubmitButton
+        dropdownValues={dropdownValues}
+        x="87%"
+        y="90%"
+        width="8%"
+        height="5%"
+        shape="smooth"
+        before_hover_color="bg-red-700"
+        hover_color="hover:bg-blue-600"
+        click_color="active:bg-green-500"
+      />
 
+    
     </>
   );
 }
