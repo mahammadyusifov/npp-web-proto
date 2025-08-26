@@ -1,3 +1,10 @@
+GIT RESET:
+
+git reset --hard HEAD
+git clean -f -d
+
+POST REQUEST:
+
 curl -X POST \
   https://a2gxqrwnzi.execute-api.ap-northeast-2.amazonaws.com/start-simulation \
   -H "Content-Type: application/json" \
