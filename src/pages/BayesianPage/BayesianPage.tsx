@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Background from "./components/BayesianPage/background";
-import Menu from "./components/BayesianPage/menu";
-import { TABS } from "./constants/tabs"; 
-import SelectionBar from './utilities/searchbar';
-import SubmitButton from './utilities/bayesian_submit_button/submitButton'
+import Background from './background'
+import Menu from './menu'
+import { TABS } from '../../constants/tabs';
+import SelectionBar from '../../utilities/searchbar';
+import SubmitButton from '../../utilities/bayesian_submit_button/submitButton'
 
 const initializeState = () => {
   const initialState = {};
