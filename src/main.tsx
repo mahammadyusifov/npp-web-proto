@@ -1,13 +1,19 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App.tsx'
+
 import './index.css'
-import BayesianPage from './pages/BayesianPage/BayesianPage.tsx'
 import Layout from './NavigationBar/layout.tsx' 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Layout>
-      <BayesianPage />
-    </Layout>
+    <BrowserRouter>
+      <Layout>
+        <App />
+      </Layout>
+    </BrowserRouter>
   </StrictMode>,
 )

@@ -1,0 +1,7 @@
+uvicorn,
+urllib3,
+fastapi,
+sqlalchemy,
+pymysql,
+requests,
+pymc

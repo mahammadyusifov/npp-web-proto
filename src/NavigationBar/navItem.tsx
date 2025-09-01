@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // --- Customizable Navigation Item Component ---
 // This component renders a single, clickable text item for the navigation bar.
@@ -51,15 +52,16 @@ const NavItem = ({
     ${active ? `${activeColor} font-bold` : `${color} ${hoverColor}`}
   `;
 
+  const urlPath = text === 'Bayesian Methods' ? '' : text.split(' ')[0].toLowerCase();
   return (
-    <button 
-      type="button" 
-      style={itemStyle} 
-      className={finalClasses} 
-      onClick={() => onClick(text)} 
+    <Link
+      to={urlPath}
+      style={itemStyle}
+      className={finalClasses}
+      onClick={() => onClick(text)} // The onClick still works here to set parent state.
     >
       {text}
-    </button>
+    </Link>
   );
 };
 

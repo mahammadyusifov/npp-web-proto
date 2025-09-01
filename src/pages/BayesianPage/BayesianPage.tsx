@@ -3,7 +3,8 @@ import Background from './background'
 import Menu from './menu'
 import { TABS } from '../../constants/tabs';
 import SelectionBar from '../../utilities/searchbar';
-import SubmitButton from '../../utilities/bayesian_submit_button/submitButton'
+import SubmitButton from './bayesian_submit_button/submitButton'
+import { AppSettings } from '../../hooks/app-settings';
 
 const initializeState = () => {
   const initialState = {};
@@ -16,7 +17,7 @@ const initializeState = () => {
   return initialState;
 };
 
-function BayesianPage() {
+function BayesianPage({settings}) {
 
   const [activeLabel, setActiveLabel] = useState('Requirement Dev');
   const [dropdownValues, setDropdownValues] = useState(initializeState());
@@ -54,6 +55,7 @@ function BayesianPage() {
 
       <SubmitButton
         dropdownValues={dropdownValues}
+        settings = {settings}
         x="87%"
         y="90%"
         width="8%"
