@@ -23,8 +23,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && update-ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
-# 2. Install CRAN packages (including remotes for other potential uses)
-RUN R -e "install.packages(c('rjags', 'remotes'), repos='https://cloud.r-project.org', Ncpus = 4)"
+# 2. Install CRAN packages (including remotes and jsonlite)
+# MODIFICATION: Added 'jsonlite' for JSON conversion
+RUN R -e "install.packages(c('rjags', 'remotes', 'jsonlite'), repos='https://cloud.r-project.org', Ncpus = 4)"
 
 # 3. Install paws from CRAN (the correct method)
 RUN R -e "install.packages('paws', repos='https://cloud.r-project.org', Ncpus = 4)"

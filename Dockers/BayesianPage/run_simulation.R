@@ -1,18 +1,18 @@
 # ===================================================================
-# Fargate Job Processor for Bayesian Simulation (v11 - AWS Integrated)
+# Fargate Job Processor for Bayesian Simulation (v12 - JSON Output)
 # ===================================================================
-# This version integrates with AWS DynamoDB for status tracking
-# and with S3 for storing simulation results.
+# This version integrates with AWS DynamoDB for status tracking,
+# stores simulation results as structured JSON in S3.
 # ===================================================================
 
 # --- 1. Load Required Libraries ---
 library("rjags")
-library("paws") # AWS SDK for R
+library("paws")     # AWS SDK for R
+library("jsonlite") # For JSON conversion
 
-print("--- SCRIPT VERSION 11 (JAGS with AWS Integration) ---")
+print("--- SCRIPT VERSION 12 (JAGS with AWS & JSON Output) ---")
 
 # --- 2. Get Job Details & Initialize AWS Clients ---
-# These are passed as environment variables from the starter Lambda
 job_id <- Sys.getenv("JOB_ID")
 table_name <- Sys.getenv("JOBS_TABLE_NAME")
 s3_bucket_name <- Sys.getenv("S3_BUCKET_NAME")
@@ -66,7 +66,7 @@ tryCatch({
   data$IC_FP <- fp_input
   data$SR_SDP_state <- getenv_numeric("Software Development Planning")
   data$SR_CD_state <- getenv_numeric("Development of Concept")
-  # (You would continue to add all your other variables here)
+  # (Continue to add all your other variables here as per your application's needs)
   print("--- Environment variables read. ---")
   
   # --- Read Simulation Settings ---
@@ -86,19 +86,42 @@ tryCatch({
   jags_samples <- coda.samples(jags_model, variable.names = parameters_to_save, n.iter = nIter)
   print("--- Simulation complete. ---")
 
-  # --- 5. Save Results to a File ---
-  output_filename <- "results.rds"
-  saveRDS(jags_samples, file = output_filename)
-  print(paste("--- Simulation results saved to", output_filename, "---"))
+  # --- 5. Process and Save Results as JSON ---
+  print("--- Converting simulation results to JSON... ---")
+
+  # Get summary statistics from the mcmc.list object
+  summary_stats <- summary(jags_samples)
   
-  # --- 6. Upload Results to S3 ---
-  s3_object_key <- paste0("results/", job_id, "/", output_filename)
+  # Create a clean, named list to hold the key results for each parameter
+  results_list <- list()
+  parameter_names <- rownames(summary_stats$statistics)
+
+  for (param in parameter_names) {
+    results_list[[param]] <- list(
+      mean = summary_stats$statistics[param, "Mean"],
+      sd = summary_stats$statistics[param, "SD"],
+      median = summary_stats$quantiles[param, "50%"],
+      q2_5 = summary_stats$quantiles[param, "2.5%"],
+      q97_5 = summary_stats$quantiles[param, "97.5%"]
+    )
+  }
+
+  # Convert the R list into a nicely formatted JSON string
+  json_output <- toJSON(results_list, pretty = TRUE, auto_unbox = TRUE)
+  
+  # Define the JSON filename and write the file
+  json_filename <- "results.json"
+  write(json_output, file = json_filename)
+  print(paste("--- JSON results saved to", json_filename, "---"))
+  
+  # --- 6. Upload JSON Results to S3 ---
+  s3_object_key <- paste0("results/", job_id, "/", json_filename)
   print(paste("--- Uploading results to s3://", s3_bucket_name, "/", s3_object_key, " ---", sep=""))
   
   s3$put_object(
     Bucket = s3_bucket_name,
     Key = s3_object_key,
-    Body = output_filename
+    Body = json_filename # Upload the JSON file
   )
   
   # --- 7. Update Job Status to "COMPLETED" ---
@@ -132,6 +155,6 @@ tryCatch({
     )
   )
   
-  # Optionally, you can cause the script to exit with an error code
+  # Cause the script to exit with an error code
   quit(status = 1)
 })
