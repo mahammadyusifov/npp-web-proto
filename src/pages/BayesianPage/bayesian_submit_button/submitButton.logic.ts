@@ -45,7 +45,7 @@ export const handleSubmitLogic = async (
   setStatusMessage('Submitting...');
   setSubmissionState('submitting');
 
-  const API_URL = "I WILL PUT THE API URL IN THE PROJECT DETAILS PDF FILE";
+  const API_URL = "https://a2gxqrwnzi.execute-api.ap-northeast-2.amazonaws.com/dev/start-simulation";
   const payload = formatPayload(dropdownValues, settings);
   const requestBody = { data: JSON.stringify(payload) };
 

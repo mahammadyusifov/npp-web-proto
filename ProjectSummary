@@ -1278,7 +1278,7 @@ export const handleSubmitLogic = async (
   setStatusMessage('Submitting...');
   setSubmissionState('submitting');
 
-  const API_URL = 'https://a2gxqrwnzi.execute-api.ap-northeast-2.amazonaws.com/dev/start-simulation';
+  const API_URL = 'CHECK THE PDF FILE';
   const payload = formatPayload(dropdownValues);
   const requestBody = { data: JSON.stringify(payload) };
 
