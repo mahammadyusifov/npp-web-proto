@@ -1,12 +1,5 @@
-import React, { useState, Children, cloneElement } from 'react';
-
-// --- Customizable Navigation Bar Component ---
-// This component is now "smart". It manages the active state of its children internally.
-//
-// Props:
-// - defaultActive: The text of the NavItem that should be active by default.
-// - onNavigate: (Optional) A function that gets called with the text of the item when it's clicked.
-// - ... (all other existing props: width, height, color, etc.)
+import React, { Children, cloneElement } from 'react';
+import { useLocation } from 'react-router-dom'; // 1. Import the useLocation hook
 
 const NavigationBar = ({
   width = '100%',
@@ -15,15 +8,27 @@ const NavigationBar = ({
   center = { x: '50%', y: '0%' },
   shape = 'sharp-rectangle',
   children,
-  defaultActive, 
-  onNavigate,      
+  onNavigate,
 }) => {
-  // The state is initialized with the 'defaultActive' prop, or the text of the first child.
-  const [activeItem, setActiveItem] = useState(defaultActive || (Children.toArray(children)[0] as React.ReactElement)?.props?.text || '');
+  
+  // 2. Get the current location object, which contains the URL pathname
+  const location = useLocation();
+
+  // 3. Determine the active item based on the current URL pathname
+  let activeItemText = "Bayesian Methods"; // Default for "/"
+  if (location.pathname.startsWith('/reliability-views')) {
+    activeItemText = "Reliability Views";
+  } else if (location.pathname.startsWith('/statistical')) {
+    activeItemText = "Statistical Methods";
+  } else if (location.pathname.startsWith('/settings')) {
+    activeItemText = "Settings";
+  }
+
+  // NOTE: We no longer need the internal useState for activeItem.
 
   const handleItemClick = (itemName) => {
-    setActiveItem(itemName);
-    // If the parent component needs to know about the navigation, call the callback.
+    // The <Link> component in NavItem handles the navigation.
+    // This function can still be used for other side effects if needed.
     if (onNavigate) {
       onNavigate(itemName);
     }
@@ -54,7 +59,8 @@ const NavigationBar = ({
         {Children.map(children, (child) => {
           if (React.isValidElement(child)) {
             return cloneElement(child, {
-              active: child.props.text === activeItem,
+              // 4. The 'active' prop is now derived from our route-aware logic
+              active: child.props.text === activeItemText,
               onClick: handleItemClick,
             });
           }
