@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation Job Tester</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: auto; }
+        #api-url { width: 100%; padding: 8px; margin-bottom: 15px; }
+        button { padding: 10px 15px; font-size: 16px; cursor: pointer; }
+        #status-display { margin-top: 20px; padding: 15px; border-radius: 5px; background-color: #f0f0f0; }
+        #results-display { margin-top: 20px; padding: 15px; background-color: #e8f5e9; border: 1px solid #c8e6c9; white-space: pre-wrap; font-family: monospace; }
+        .error { background-color: #ffebee; border: 1px solid #ffcdd2; color: #c62828; }
+    </style>
+</head>
+<body>
+
+    <h1>Bayesian Simulation Tester</h1>
+    
+    <label for="api-url"><b>1. Paste Your API Gateway Invoke URL:</b></label>
+    <input type="text" id="api-url" placeholder="https://....execute-api.ap-northeast-2.amazonaws.com/v1">
+
+    <button id="start-btn"><b>2. Start Simulation</b></button>
+
+    <div id="status-display">Status will appear here...</div>
+    <pre id="results-display" style="display:none;"></pre>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const apiUrlInput = document.getElementById('api-url');
+        const statusDisplay = document.getElementById('status-display');
+        const resultsDisplay = document.getElementById('results-display');
+        let API_BASE_URL = '';
+
+        startBtn.addEventListener('click', startSimulation);
+
+        function setStatus(message, isError = false) {
+            statusDisplay.textContent = message;
+            statusDisplay.classList.toggle('error', isError);
+        }
+
+        async function startSimulation() {
+            API_BASE_URL = apiUrlInput.value.trim();
+            if (!API_BASE_URL) {
+                setStatus("Please paste your API Invoke URL first.", true);
+                return;
+            }
+
+            setStatus("Starting simulation job...");
+            resultsDisplay.style.display = 'none';
+
+            try {
+                // --- MODIFICATION IS HERE ---
+                // First, create the form data object that your Lambda expects
+                const formData = {
+                    settings: { 
+                        nChains: 2, 
+                        nIter: 5000, 
+                        nBurnin: 1000 
+                    },
+                    tab1: {
+                        "FP Input": "50",
+                        "Software Development Planning": "Medium",
+                        "Development of Concept": "Medium"
+                    }
+                };
+
+                // Now, wrap that object in the required {"data": "..."} structure
+                const requestBody = {
+                    data: JSON.stringify(formData)
+                };
+                
+                const startResponse = await fetch(`${API_BASE_URL}/simulations/bayesian`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody) // Send the wrapped body
+                });
+
+                if (!startResponse.ok) {
+                    const errorData = await startResponse.json();
+                    throw new Error(`Failed to start job: ${errorData.message || startResponse.statusText}`);
+                }
+                
+                const data = await startResponse.json();
+                const { jobId } = data;
+
+                if (!jobId) {
+                    throw new Error("API response did not include a jobId.");
+                }
+                
+                setStatus(`Job started with ID: ${jobId}. Polling for status...`);
+                pollJobStatus(jobId);
+
+            } catch (error) {
+                setStatus(`Error: ${error.message}`, true);
+            }
+        }
+
+        async function pollJobStatus(jobId) {
+            try {
+                const statusResponse = await fetch(`${API_BASE_URL}/jobs/${jobId}`);
+                if (!statusResponse.ok) throw new Error(`Status check failed: ${statusResponse.statusText}`);
+
+                const data = await statusResponse.json();
+                setStatus(`Job Status: ${data.jobStatus}`);
+
+                if (data.jobStatus === 'COMPLETED') {
+                    fetchResults(jobId);
+                } else if (data.jobStatus === 'FAILED') {
+                    setStatus(`Job ${jobId} failed. Check Lambda logs for details.`, true);
+                } else {
+                    // If still running, check again in 5 seconds
+                    setTimeout(() => pollJobStatus(jobId), 5000);
+                }
+
+            } catch (error) {
+                setStatus(`Error during polling: ${error.message}`, true);
+            }
+        }
+
+        async function fetchResults(jobId) {
+             try {
+                setStatus(`Job complete. Fetching results URL for job ${jobId}...`);
+                
+                // 1. Get the secure S3 download URL from our API
+                const urlResponse = await fetch(`${API_BASE_URL}/jobs/${jobId}/results-url`, { method: 'POST' });
+                if (!urlResponse.ok) throw new Error(`Could not get results URL: ${urlResponse.statusText}`);
+                
+                const { downloadUrl } = await urlResponse.json();
+
+                // 2. Use the secure URL to download the actual results.json file from S3
+                setStatus(`Fetching data from secure URL...`);
+                const resultsResponse = await fetch(downloadUrl);
+                if (!resultsResponse.ok) throw new Error(`Could not download results file: ${resultsResponse.statusText}`);
+
+                const resultsData = await resultsResponse.json();
+                
+                // 3. Display the final JSON results
+                resultsDisplay.textContent = JSON.stringify(resultsData, null, 2);
+                resultsDisplay.style.display = 'block';
+                setStatus(`Successfully retrieved results for job ${jobId}.`);
+
+            } catch (error) {
+                 setStatus(`Error fetching results: ${error.message}`, true);
+            }
+        }
+    </script>
+</body>
+</html>
