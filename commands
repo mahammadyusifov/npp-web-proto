@@ -14,6 +14,3 @@ curl -X POST \
 DOCKER BUILD:
 
 docker build --platform linux/amd64 -t bayesian-simulation-repo .
-
-PW:
-V(@7\&/7k3Ri

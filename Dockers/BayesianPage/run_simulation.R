@@ -51,6 +51,13 @@ tryCatch({
     if (is.null(val) || val == "") return(default_val)
     return(as.numeric(val))
   }
+
+# Helper function for reading logical (TRUE/FALSE) variables
+getenv_logical <- function(var_name, default_val = TRUE) {
+  val <- tolower(Sys.getenv(var_name, unset = ""))
+  if (val == "") return(default_val)
+  return(val == "true")
+}
   
   # --- Load Static Data ---
   source("/app/plumber/data.R")
@@ -73,7 +80,17 @@ tryCatch({
   nChains <- getenv_numeric("nChains", 2)
   nIter <- getenv_numeric("nIter", 5000)
   nBurnin <- getenv_numeric("nBurnin", 1000)
-  print(paste("--- Starting JAGS simulation with nChains =", nChains, "and nIter =", nIter, "---"))
+  nThin <- getenv_numeric("nThin", 1) 
+computeDIC <- getenv_logical("computeDIC", TRUE)
+print(paste0(
+  "--- Starting JAGS simulation with parameters: ",
+  "nChains = ", nChains,
+  ", nIter = ", nIter,
+  ", nBurnin = ", nBurnin,
+  ", nThin = ", nThin,
+  ", computeDIC = ", computeDIC,
+  " ---"
+))
 
   # --- Run the JAGS Simulation ---
   model.file <- "/app/plumber/R2WinBUGS_Combined_Model.txt"

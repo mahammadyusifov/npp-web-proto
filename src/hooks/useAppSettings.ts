@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 // 1. Create and export the custom hook function.
-export const AppSettings = (): AppSettings => {
+export const useAppSettings = (): AppSettings => {
   // 2. Move all your useState calls inside this function.
   const [nChains, setnChains] = useState(4);
   const [nIter, setnIter] = useState(10000);

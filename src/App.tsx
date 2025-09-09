@@ -6,11 +6,11 @@ import StatisticalPage from "./pages/StatisticalPage/StatisticalPage";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import ReliabilityPage from "./pages/ReliabilityPage/ReliabilityPage";
 
-import { AppSettings } from './hooks/app-settings';
+import { useAppSettings } from './hooks/useAppSettings';
 import * as apiService from './services/apiService'; // Assuming you have this file
 
 function App() {
-  const settingsProps = AppSettings();
+  const settingsProps = useAppSettings();
   const navigate = useNavigate();
   const location = useLocation();
 
